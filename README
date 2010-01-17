@@ -1,0 +1,30 @@
+== Description
+The net-proto package provides a way to get protocol information.
+
+This is really just a wrapper for the getprotobyname(), getprotobynumber() and
+the getprotoent() functions.
+
+== Prerequisites
+Ruby 1.8.0 or later.
+
+== Installation
+rake test (optional)
+rake install (non-gem) OR rake install_gem (gem)
+
+== Notes
+The net-proto package uses reentrant code for sunos and linux. Otherwise, the
+generic form of the functions are used (which may be reentrant by default
+anway - check the man pages on your platform).
+
+The Proto.getprotoent method is not supported on MS Windows because the
+underlying function isn't supported by the MS Windows API.
+
+== Why should I use this?
+Ruby has a predefined set of constants in socket.c in the general form of
+IPPROTO_XXX, Y.  However, using constants in this fashion can be unreliable
+because it's easy to define your own protocols (I set 'echo' to 7, for
+example), or to modify/delete entries in /etc/protocols.
+
+== Further Documentation
+See the 'netproto.txt' file under the 'doc' directory for more details.  There
+is also an example under the 'examples' directory.

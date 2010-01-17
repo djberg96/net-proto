@@ -1,0 +1,13 @@
+* CHANGES
+* MANIFEST
+* README
+* Rakefile
+* net-proto.gemspec
+* doc/netproto.txt
+* examples/example_net_proto.rb
+* ext/version.h
+* ext/generic/generic.c
+* ext/linux/linux.c
+* ext/sunos/sunos.c 
+* ext/windows/windows.c
+* test/test_net_proto.rb

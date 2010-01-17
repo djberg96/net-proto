@@ -1,0 +1,82 @@
+== Description
+   Net::Proto - An interface for the 'getproto' family of functions.
+	
+== Synopsis
+   require "net/proto"
+   include Net
+
+   Proto.getprotobyname("tcp") # -> 6
+   Proto.getprotobynumber(1)   # -> "icmp"
+
+   # Block form
+   Proto.getprotoent{ |p|
+      puts p.name
+      puts p.aliases
+      puts p.proto
+   }
+   	
+   # Non-block form
+   a = Proto.getprotoent
+   	
+== Constants
+VERSION
+   The current version number of this package, returned as a String.
+	
+== Class Methods
+Proto.getprotobyname(name)
+   Given a protocol string, returns the corresponding number, or nil if not
+   found.
+    
+Proto.getprotobynumber(num)
+   Given a protocol number, returns the corresponding string, or nil if not
+   found.
+    
+Proto.getprotoent
+Proto.getprotoent{ |struct| ... }
+   In block form, yields each entry from /etc/protocols as a struct of type
+   Proto::ProtoStruct.  In non-block form, returns an array of
+   Proto::ProtoStruct objects.
+	
+   The fields are 'name' (a String), 'aliases' (an Array of String's,
+   though often only one element), and 'proto' (a Fixnum).
+
+   This method is NOT supported on MS Windows.
+    
+== Notes
+   This module uses the reentrant (i.e. thread safe) functions on those
+   platforms that support them.  In some cases, e.g. FreeBSD and HP-UX, the
+   standard function names are reentrant by default (i.e. there is no '_r'
+   version, or it's not needed), so you will not see specific .c files for
+   all platforms.
+
+   The 'setprotoent()' and 'endprotoent()' functions are not implemented as
+   separate method calls.  Rather, these are called internally by the various
+   methods, except on Windows, which does not support them.
+
+   The 'getprotoent()' method is not supported on the MS Windows platform.
+   It's not part of the API as of Windows XP.
+   
+== Known Bugs
+   None that I'm aware of.  Please log any bug reports on the project page
+   at http://ruby-netutils.sf.net.
+	
+== Future Plans
+   Use the asynchronous calls (WSAAsyncGetProtoByName and
+   WSAAsyncGetProtoByNumber) on MS Windows systems.
+	
+== Copyright
+   (C) 2003-2007 Daniel J. Berger
+   All rights reserved.
+	
+== Warranty
+   This package is provided "as is" and without any express or
+   implied warranties, including, without limitation, the implied
+   warranties of merchantability and fitness for a particular purpose.
+	
+== License
+   Ruby's
+	
+== Author
+   Daniel J. Berger
+   djberg96 at gmail dot com
+   imperator on IRC (Freenode)
