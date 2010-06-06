@@ -9,6 +9,7 @@ gem 'test-unit'
 
 require 'net/proto'
 require 'test/unit'
+require 'rbconfig'
 
 class TC_Net_Proto < Test::Unit::TestCase
 
@@ -20,6 +21,8 @@ class TC_Net_Proto < Test::Unit::TestCase
          mobile ospf pim ipcomp vrrp sctp hopopt ipv6
          ipv6-route ipv6-frag esp ah ipv6-icmp ipv6-nonxt ipv6-opts
       /
+
+      @@windows = Config::CONFIG['host_os'] =~ /msdos|mswin|win32|cygwin|mingw/i
    end
 
    def setup
@@ -27,7 +30,7 @@ class TC_Net_Proto < Test::Unit::TestCase
    end
 
    def test_version
-      assert_equal('1.0.5', Net::Proto::VERSION)
+      assert_equal('1.1.0', Net::Proto::VERSION)
    end
 
    def test_getprotobynumber_basic
@@ -74,7 +77,7 @@ class TC_Net_Proto < Test::Unit::TestCase
    end
 
    def test_getprotoent_basic
-      omit_if(Config::CONFIG['host_os'].match('mswin'), 'Skipped on MS Windows')
+      omit_if(@@windows, 'Skipped on MS Windows')
 
       assert_respond_to(Net::Proto, :getprotoent)    
       assert_nothing_raised{ Net::Proto.getprotoent }
@@ -82,14 +85,14 @@ class TC_Net_Proto < Test::Unit::TestCase
    end
 
    def test_getprotoent
-      omit_if(Config::CONFIG['host_os'].match('mswin'), 'Skipped on MS Windows')
+      omit_if(@@windows, 'Skipped on MS Windows')
 
       assert_kind_of(Struct::ProtoStruct, Net::Proto.getprotoent.first)
       assert_nil(Net::Proto.getprotoent{})
    end
 
    def test_getprotoent_struct
-      omit_if(Config::CONFIG['host_os'].match('mswin'), 'Skipped on MS Windows')
+      omit_if(@@windows, 'Skipped on MS Windows')
 
       @protoent = Net::Proto.getprotoent.first
       assert_equal(['name', 'aliases', 'proto'], @protoent.members)
@@ -99,14 +102,14 @@ class TC_Net_Proto < Test::Unit::TestCase
    end
 
    def test_getprotoent_struct_aliases_member
-      omit_if(Config::CONFIG['host_os'].match('mswin'), 'Skipped on MS Windows')
+      omit_if(@@windows, 'Skipped on MS Windows')
 
       @protoent = Net::Proto.getprotoent.first
       assert_true(@protoent.aliases.all?{ |e| e.is_a?(String) })
    end
 
    def test_getprotoent_struct_frozen
-      omit_if(Config::CONFIG['host_os'].match('mswin'), 'Skipped on MS Windows')
+      omit_if(@@windows, 'Skipped on MS Windows')
 
       @protoent = Net::Proto.getprotoent.first
       assert_true(@protoent.frozen?)
