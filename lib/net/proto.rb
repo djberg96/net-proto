@@ -1,5 +1,3 @@
-require 'rubygems'
-gem 'ffi'
 require 'ffi'
 
 module Net
