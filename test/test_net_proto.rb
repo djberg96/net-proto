@@ -27,7 +27,7 @@ class TC_Net_Proto < Test::Unit::TestCase
    end
 
    def test_version
-      assert_equal('1.0.4', Net::Proto::VERSION)
+      assert_equal('1.0.5', Net::Proto::VERSION)
    end
 
    def test_getprotobynumber_basic
