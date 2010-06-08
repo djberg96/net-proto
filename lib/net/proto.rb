@@ -3,7 +3,10 @@ require 'ffi'
 module Net
   class Proto
     extend FFI::Library
-    ffi_lib FFI::Library::LIBC unless RUBY_PLATFORM == 'java'
+
+    unless RUBY_PLATFORM == 'java' && JRUBY_VERSION.to_f < 1.5
+      ffi_lib(FFI::Library::LIBC)
+    end
 
     # The version of the net-proto library
     VERSION = '1.1.0'
@@ -14,9 +17,9 @@ module Net
 
     class ProtocolStruct < FFI::Struct
       layout(
-        'p_name',    :string,
-        'p_aliases', :pointer,
-        'p_proto',   :int
+        :p_name,    :string,
+        :p_aliases, :pointer,
+        :p_proto,   :int
       ) 
     end
 
@@ -63,7 +66,7 @@ module Net
         endprotoent()
       end
 
-      ptr.null? ? nil : struct['p_proto']
+      ptr.null? ? nil : struct[:p_proto]
     end
 
     def self.getprotobynumber(protocol)
@@ -77,7 +80,7 @@ module Net
         endprotoent()
       end
 
-      ptr.null? ? nil: struct['p_name']
+      ptr.null? ? nil: struct[:p_name]
     end
 
     def self.getprotoent
@@ -89,9 +92,9 @@ module Net
           ffi_struct  = ProtocolStruct.new(ptr)
 
           ruby_struct = ProtoStruct.new(
-            ffi_struct['p_name'],
-            ffi_struct['p_aliases'].read_array_of_string,
-            ffi_struct['p_proto']
+            ffi_struct[:p_name],
+            ffi_struct[:p_aliases].read_array_of_string,
+            ffi_struct[:p_proto]
           ).freeze
 
           if block_given?
