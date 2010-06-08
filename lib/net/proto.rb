@@ -51,6 +51,9 @@ module Net
       alias getprotobyname_c getprotobyname
       alias getprotobynumber_c getprotobynumber
       alias getprotoent_c getprotoent
+      remove_method :getprotobyname
+      remove_method :getprotobynumber
+      remove_method :getprotoent
     end
 
     public
