@@ -43,8 +43,8 @@ module Net
 
     attach_function 'setprotoent', [:int], :void
     attach_function 'endprotoent', [], :void
-    attach_function 'getprotobyname_r', [:string, :pointer, :string, :long, :long], :int
-    attach_function 'getprotobynumber_r', [:int, :pointer, :string, :long, :long], :int
+    attach_function 'getprotobyname_r', [:string, :pointer, :string, :long, :pointer], :int
+    attach_function 'getprotobynumber_r', [:int, :pointer, :string, :long, :pointer], :int
     attach_function 'getprotoent_r', [:pointer, :string, :long, :pointer], :int
 
     public
@@ -52,34 +52,35 @@ module Net
     def self.getprotobyname(protocol)
       raise TypeError unless protocol.is_a?(String)
 
-      ptr = FFI::MemoryPointer.new(ProtocolStruct.size)
-      buf = 1.chr * 8192
+      pptr = FFI::MemoryPointer.new(ProtocolStruct.size)
+      qptr = FFI::MemoryPointer.new(ProtocolStruct.size)
+      buf  = 1.chr * 1024
 
       begin
         setprotoent(0)
-        int = getprotobyname_r(protocol, ptr, buf, buf.size, ptr.address)
+        int = getprotobyname_r(protocol, pptr, buf, buf.size, qptr)
       ensure
         endprotoent()
       end
 
-      int > 0 ? nil : ProtocolStruct.new(ptr)[:p_proto]
+      int > 0 ? nil : ProtocolStruct.new(pptr)[:p_proto]
     end
 
-    # FIXME: Returns gibberish for some reason.
     def self.getprotobynumber(protocol)
       raise TypeError unless protocol.is_a?(Integer)
 
-      ptr = FFI::MemoryPointer.new(ProtocolStruct.size)
-      buf = 1.chr * 8192
+      pptr = FFI::MemoryPointer.new(ProtocolStruct.size)
+      qptr = FFI::MemoryPointer.new(ProtocolStruct.size)
+      buf  = 1.chr * 1024
 
       begin
         setprotoent(0)
-        int = getprotobynumber_r(protocol, ptr, buf, buf.size, ptr.address)
+        int = getprotobynumber_r(protocol, pptr, buf, buf.size, qptr)
       ensure
         endprotoent()
       end
 
-      int > 0 ? nil : ProtocolStruct.new(ptr)[:p_name]
+      int > 0 ? nil : ProtocolStruct.new(pptr)[:p_name]
     end
 
     def self.getprotoent
