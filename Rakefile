@@ -28,6 +28,7 @@ task :example do
 end
 
 Rake::TestTask.new do |t|
+  t.libs.unshift 'lib/linux' if Config::CONFIG['host_os'] =~ /linux/i
   t.warning = true
   t.verbose = true
 end

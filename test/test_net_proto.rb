@@ -33,6 +33,15 @@ class TC_Net_Proto < Test::Unit::TestCase
     assert_equal('1.1.0', Net::Proto::VERSION)
   end
 
+  def test_get_protocol_basic
+    assert_respond_to(Net::Proto, :get_protocol)
+  end
+
+  def test_get_protocol_accepts_both_a_string_or_a_number
+    assert_nothing_raised{ Net::Proto.get_protocol(1) }
+    assert_nothing_raised{ Net::Proto.get_protocol('tcp') }
+  end
+
   def test_getprotobynumber_basic
     assert_respond_to(Net::Proto, :getprotobynumber)
     assert_nothing_raised{ 0.upto(132){ |n| Net::Proto.getprotobynumber(n) } }

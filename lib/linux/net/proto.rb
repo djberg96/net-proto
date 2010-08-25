@@ -1,6 +1,9 @@
 require 'ffi'
 
+# The Net module serves as a namespace only.
 module Net
+
+  # The Proto class serves as the base class for the various protocol methods.
   class Proto
     extend FFI::Library
 
@@ -48,6 +51,14 @@ module Net
     attach_function 'getprotoent_r', [:pointer, :string, :long, :pointer], :int
 
     public
+
+    def self.get_protocol(argument)
+      if argument.is_a?(String)
+        getprotobyname(argument)
+      else
+        getprotobynumber(argument)
+      end
+    end
 
     def self.getprotobyname(protocol)
       raise TypeError unless protocol.is_a?(String)
