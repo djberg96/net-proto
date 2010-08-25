@@ -52,6 +52,16 @@ module Net
 
     public
 
+    # If given a protocol string, returns the corresponding number. If
+    # given a protocol number, returns the corresponding string.
+    #
+    # Returns nil if not found in either case.
+    #
+    # Examples:
+    #
+    #   Net::Proto.get_protocol('tcp') # => 6
+    #   Net::Proto.get_protocol(1)     # => 'icmp'
+    #
     def self.get_protocol(argument)
       if argument.is_a?(String)
         getprotobyname(argument)
@@ -60,6 +70,14 @@ module Net
       end
     end
 
+    # Given a protocol string, returns the corresponding number, or nil if
+    # not found.
+    #
+    # Examples:
+    #
+    #    Net::Proto.getprotobyname('tcp')   # => 6
+    #    Net::Proto.getprotobyname('bogus') # => nil
+    #
     def self.getprotobyname(protocol)
       raise TypeError unless protocol.is_a?(String)
 
@@ -77,6 +95,14 @@ module Net
       int > 0 || qptr.get_pointer(0).null? ? nil : ProtocolStruct.new(pptr)[:p_proto]
     end
 
+    # Given a protocol number, returns the corresponding string, or nil if
+    # not found.
+    #
+    # Examples:
+    #
+    #   Net::Proto.getprotobynumber(6)   # => 'tcp'
+    #   Net::Proto.getprotobynumber(999) # => nil
+    #
     def self.getprotobynumber(protocol)
       raise TypeError unless protocol.is_a?(Integer)
 
@@ -94,6 +120,20 @@ module Net
       int > 0 || qptr.get_pointer(0).null? ? nil : ProtocolStruct.new(pptr)[:p_name]
     end
 
+    # In block form, yields each entry from /etc/protocols as a struct of type
+    # Proto::ProtoStruct. In non-block form, returns an array of structs.
+    #
+    # The fields are 'name' (a string), 'aliases' (an array of strings,
+    # though often only one element), and 'proto' (a number).
+    #
+    # Example:
+    #
+    #   Net::Proto.getprotoent.each{ |prot|
+    #      p prot.name
+    #      p prot.aliases
+    #      p prot.proto
+    #   }
+    #
     def self.getprotoent
       structs = block_given? ? nil : []
 
