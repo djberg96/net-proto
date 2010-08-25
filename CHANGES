@@ -1,3 +1,12 @@
+== 1.1.0 - ???
+* Switched to FFI instead of C backend.
+* Added the generic get_protocol instance method that accepts either a
+  string or an integer and does the right thing. This method should be
+  preferred going forward.
+* Updates to the README.
+* Refactored the test suite to use features of test-unit 2.x.
+* Added a default rake task.
+
 == 1.0.5 - 12-Sep-2009
 * Changed license to Artistic 2.0.
 * Added a build_binary_gem task.

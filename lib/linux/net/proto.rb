@@ -43,8 +43,8 @@ module Net
 
     attach_function 'setprotoent', [:int], :void
     attach_function 'endprotoent', [], :void
-    attach_function 'getprotobyname_r', [:string, :pointer, :string, :long, :pointer], :int
-    attach_function 'getprotobynumber_r', [:int, :pointer, :string, :long, :pointer], :int
+    attach_function 'getprotobyname_r', [:string, :pointer, :pointer, :long, :pointer], :int
+    attach_function 'getprotobynumber_r', [:int, :pointer, :pointer, :long, :pointer], :int
     attach_function 'getprotoent_r', [:pointer, :string, :long, :pointer], :int
 
     public
@@ -54,7 +54,7 @@ module Net
 
       pptr = FFI::MemoryPointer.new(ProtocolStruct.size)
       qptr = FFI::MemoryPointer.new(ProtocolStruct.size)
-      buf  = 1.chr * 1024
+      buf  = FFI::MemoryPointer.new(:char, 1024)
 
       begin
         setprotoent(0)
@@ -63,7 +63,7 @@ module Net
         endprotoent()
       end
 
-      int > 0 ? nil : ProtocolStruct.new(pptr)[:p_proto]
+      int > 0 || qptr.get_pointer(0).null? ? nil : ProtocolStruct.new(pptr)[:p_proto]
     end
 
     def self.getprotobynumber(protocol)
@@ -71,7 +71,7 @@ module Net
 
       pptr = FFI::MemoryPointer.new(ProtocolStruct.size)
       qptr = FFI::MemoryPointer.new(ProtocolStruct.size)
-      buf  = 1.chr * 1024
+      buf  = FFI::MemoryPointer.new(:char, 1024)
 
       begin
         setprotoent(0)
@@ -80,7 +80,7 @@ module Net
         endprotoent()
       end
 
-      int > 0 ? nil : ProtocolStruct.new(pptr)[:p_name]
+      int > 0 || qptr.get_pointer(0).null? ? nil : ProtocolStruct.new(pptr)[:p_name]
     end
 
     def self.getprotoent
