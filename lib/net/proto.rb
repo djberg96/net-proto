@@ -58,6 +58,14 @@ module Net
 
     public
 
+    def self.get_protocol(arg)
+      if arg.is_a?(String)
+        getprotobynumber(arg)
+      else
+        getprotobyname(arg)
+      end
+    end
+
     def self.getprotobyname(protocol)
       raise TypeError unless protocol.is_a?(String)
 
@@ -107,7 +115,7 @@ module Net
           end
         end
       ensure
-        endprotoent
+        endprotoent()
       end
 
       structs
