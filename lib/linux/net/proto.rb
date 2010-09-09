@@ -30,7 +30,12 @@ module Net
       def read_array_of_string
         elements = []
 
-        psz = RUBY_PLATFORM == 'java' ? 4 : self.class.size
+        if FFI::Pointer.respond_to?(:size)
+          psz = FFI::Pointer.size
+        else
+          psz = FFI::Type::POINTER.size
+        end
+
         loc = self
 
         until ((element = loc.read_pointer).null?)
@@ -48,7 +53,7 @@ module Net
     attach_function 'endprotoent', [], :void
     attach_function 'getprotobyname_r', [:string, :pointer, :pointer, :long, :pointer], :int
     attach_function 'getprotobynumber_r', [:int, :pointer, :pointer, :long, :pointer], :int
-    attach_function 'getprotoent_r', [:pointer, :string, :long, :pointer], :int
+    attach_function 'getprotoent_r', [:pointer, :pointer, :long, :pointer], :int
 
     public
 
@@ -139,14 +144,14 @@ module Net
 
       pptr = FFI::MemoryPointer.new(ProtocolStruct.size)
       qptr = FFI::MemoryPointer.new(ProtocolStruct.size)
-      buf  = 1.chr * 1024
+      buf  = FFI::MemoryPointer.new(1024)
 
       begin
         setprotoent(0)
 
         while int = getprotoent_r(pptr, buf, buf.size, qptr)
           break if int > 0 || qptr.null?
-          buf = 1.chr * 1024
+          buf = FFI::MemoryPointer.new(1024)
 
           ffi_struct = ProtocolStruct.new(pptr) 
 
