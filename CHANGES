@@ -1,3 +1,8 @@
+== 1.0.6 - 22-Oct-2010
+* Refactored the test suite and removed one test that was implementation
+  dependent and not useful.
+* Updates to the README and gemspec.
+
 == 1.0.5 - 12-Sep-2009
 * Changed license to Artistic 2.0.
 * Added a build_binary_gem task.
