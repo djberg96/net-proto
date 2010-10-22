@@ -49,7 +49,6 @@ class TC_Net_Proto < Test::Unit::TestCase
    def test_getprotobynumber_expected_errors
       assert_raise(TypeError){ Net::Proto.getprotobynumber('foo') }
       assert_raise(TypeError){ Net::Proto.getprotobynumber(nil) }
-      assert_raise(RangeError){ Net::Proto.getprotobynumber(999999999999) }
    end
 
    def test_getprotobyname_basic
