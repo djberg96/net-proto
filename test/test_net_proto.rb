@@ -72,12 +72,12 @@ class TC_Net_Proto < Test::Unit::TestCase
 
   test "getprotobyname requires a string argument" do
     assert_raises(TypeError){ Net::Proto.getprotobyname(1) }
-    assert_raises(TypeError){ Net::Proto.getprotobyname(nil) }        
+    assert_raises(TypeError){ Net::Proto.getprotobyname(nil) }
   end
 
   test "getprotoent basic functionality" do
     omit_if(@@windows, 'Skipped on MS Windows')
-    assert_respond_to(Net::Proto, :getprotoent)    
+    assert_respond_to(Net::Proto, :getprotoent)
     assert_nothing_raised{ Net::Proto.getprotoent }
   end
 
@@ -100,7 +100,9 @@ class TC_Net_Proto < Test::Unit::TestCase
   test "structs returned by getprotoent contain specific members" do
     omit_if(@@windows, 'Skipped on MS Windows')
     @protoent = Net::Proto.getprotoent.first
-    assert_equal(['name', 'aliases', 'proto'], @protoent.members)
+    expected = %w[name aliases proto]
+    expected.map!(&:to_sym) if RUBY_VERSION.to_f >= 1.9
+    assert_equal(expected, @protoent.members)
   end
 
   test "struct members are of a specific type" do
@@ -122,15 +124,15 @@ class TC_Net_Proto < Test::Unit::TestCase
     @protoent = Net::Proto.getprotoent.first
     assert_true(@protoent.frozen?)
   end
-   
+
   test "there is no constructor for the Proto class" do
-    assert_raise(NoMethodError){ Net::Proto.new }      
+    assert_raise(NoMethodError){ Net::Proto.new }
   end
 
   def teardown
     @protoent = nil
   end
-   
+
   def self.shutdown
     @@protocols = nil
   end
