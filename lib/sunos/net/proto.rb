@@ -1,8 +1,7 @@
-require 'ffi'
+require 'net/proto/common'
 
 module Net
   class Proto
-    extend FFI::Library
     ffi_lib 'socket'
 
     VERSION = '1.1.0'
@@ -17,31 +16,6 @@ module Net
 
     private_class_method :setprotoent, :endprotoent, :getprotobyname_r
     private_class_method :getprotobynumber_r, :getprotoent_r
-
-    class FFI::Pointer
-      def read_array_of_string
-        elements = []
-
-        loc = self
-
-        until ((element = loc.read_pointer).null?)
-          elements << element.read_string
-          loc += FFI::Type::POINTER.size
-        end
-
-         elements
-      end
-    end
-
-    class ProtocolStruct < FFI::Struct
-      layout(
-        :p_name,    :string,
-        :p_aliases, :pointer,
-        :p_proto,   :int
-      )
-    end
-
-    ProtoStruct = Struct.new('ProtoStruct', :name, :aliases, :proto)
 
     public
 
