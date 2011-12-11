@@ -66,7 +66,7 @@ module Net
         endprotoent()
       end
 
-      ptr.get_pointer(0).null? ? nil : ProtocolStruct.new(pptr)[:p_proto]
+      ptr.null? ? nil : ProtocolStruct.new(pptr)[:p_proto]
     end
 
     def self.getprotobynumber(protocol)
@@ -82,7 +82,7 @@ module Net
         endprotoent()
       end
 
-      ptr.get_pointer(0).null? ? nil : ProtocolStruct.new(pptr)[:p_name]
+      ptr.null? ? nil : ProtocolStruct.new(pptr)[:p_name]
     end
 
     def self.getprotoent
