@@ -6,10 +6,7 @@ module Net
   # The Proto class serves as the base class for the various protocol methods.
   class Proto
     extend FFI::Library
-
-    unless RUBY_PLATFORM == 'java' && JRUBY_VERSION.to_f < 1.5
-      ffi_lib(FFI::Library::LIBC)
-    end
+    ffi_lib FFI::Library::LIBC
 
     # The version of the net-proto library
     VERSION = '1.1.0'
@@ -30,17 +27,11 @@ module Net
       def read_array_of_string
         elements = []
 
-        if FFI::Pointer.respond_to?(:size)
-          psz = FFI::Pointer.size
-        else
-          psz = FFI::Type::POINTER.size
-        end
-
         loc = self
 
         until ((element = loc.read_pointer).null?)
           elements << element.read_string
-          loc += psz
+          loc += FFI::Type::POINTER.size
         end
 
          elements
