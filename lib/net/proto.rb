@@ -5,10 +5,7 @@ module Net
   # The Proto class serves as the base class for the various protocol methods.
   class Proto
     extend FFI::Library
-
-    unless RUBY_PLATFORM == 'java' && JRUBY_VERSION.to_f < 1.5
-      ffi_lib(FFI::Library::LIBC)
-    end
+    ffi_lib(FFI::Library::LIBC)
 
     # The version of the net-proto library
     VERSION = '1.1.0'
@@ -22,7 +19,7 @@ module Net
         :p_name,    :string,
         :p_aliases, :pointer,
         :p_proto,   :int
-      ) 
+      )
     end
 
     class FFI::Pointer
@@ -37,7 +34,7 @@ module Net
           loc += psz
         end
 
-         elements
+        elements
       end
     end
 
@@ -48,6 +45,12 @@ module Net
     attach_function 'getprotobyname', [:string], :pointer
     attach_function 'getprotobynumber', [:int], :pointer
     attach_function 'getprotoent', [], :pointer
+
+    private_class_method :setprotoent
+    private_class_method :endprotoent
+    private_class_method :getprotobyname
+    private_class_method :getprotobynumber
+    private_class_method :getprotoent
 
     class << self
       alias getprotobyname_c getprotobyname
@@ -91,7 +94,7 @@ module Net
 
       begin
         setprotoent(0)
-        ptr = getprotobyname_c(protocol) 
+        ptr = getprotobyname_c(protocol)
         struct = ProtocolStruct.new(ptr) unless ptr.null?
       ensure
         endprotoent()

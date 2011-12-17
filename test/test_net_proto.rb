@@ -6,10 +6,8 @@
 ###########################################################################
 require 'rubygems'
 gem 'test-unit'
-
 require 'net/proto'
 require 'test/unit'
-require 'rbconfig'
 
 class TC_Net_Proto < Test::Unit::TestCase
 
@@ -22,86 +20,91 @@ class TC_Net_Proto < Test::Unit::TestCase
       ipv6-route ipv6-frag esp ah ipv6-icmp ipv6-nonxt ipv6-opts
     /
 
-    @@windows = Config::CONFIG['host_os'] =~ /msdos|mswin|win32|cygwin|mingw/i
+    @@windows = File::ALT_SEPARATOR
   end
 
   def setup
     @protoent = nil
   end
 
-  def test_version
+  test "version number is set to expected value" do
     assert_equal('1.1.0', Net::Proto::VERSION)
   end
 
-  def test_get_protocol_basic
+  test "get_protocol method basic functionality" do
     assert_respond_to(Net::Proto, :get_protocol)
   end
 
-  def test_get_protocol_accepts_both_a_string_or_a_number
+  test "get_protocol method accepts a string or a number" do
     assert_nothing_raised{ Net::Proto.get_protocol(1) }
     assert_nothing_raised{ Net::Proto.get_protocol('tcp') }
   end
 
-  def test_getprotobynumber_basic
+  test "get_protocol returns nil if protocol not found" do
+    assert_nil(Net::Proto.get_protocol(9999999))
+  end
+
+  test "get_protocol fails if an invalid type is passed" do
+    assert_raise(TypeError){ Net::Proto.get_protocol([]) }
+  end
+
+  test "getprotobynumber basic functionality" do
     assert_respond_to(Net::Proto, :getprotobynumber)
     assert_nothing_raised{ 0.upto(132){ |n| Net::Proto.getprotobynumber(n) } }
     assert_kind_of(String, Net::Proto.getprotobynumber(1))
   end
 
-  def test_getprotobynumber_result_expected
+  test "getprotobynumber returns the expected result" do
     assert_equal('icmp', Net::Proto.getprotobynumber(1))
     assert_equal('tcp', Net::Proto.getprotobynumber(6))
   end
 
-  def test_getprotbynumber_result_not_expected
+  test "getprotobynumber returns nil if not found" do
     assert_equal(nil, Net::Proto.getprotobynumber(9999999))
     assert_equal(nil, Net::Proto.getprotobynumber(-1))
   end
 
-  def test_getprotobynumber_expected_errors
+  test "getprotobynumber raises a TypeError if a non-numeric arg is used" do
     assert_raise(TypeError){ Net::Proto.getprotobynumber('foo') }
     assert_raise(TypeError){ Net::Proto.getprotobynumber(nil) }
   end
 
-  def test_getprotobyname_basic
+  test "getprotobyname method basic functionality" do
     assert_respond_to(Net::Proto, :getprotobyname)
     @@protocols.each{ |n| assert_nothing_raised{ Net::Proto.getprotobyname(n) } }
   end
 
-  def test_getprotobyname_result_expected
+  test "getprotobyname returns the expected result" do
     assert_equal(1, Net::Proto.getprotobyname('icmp'))
     assert_equal(6, Net::Proto.getprotobyname('tcp'))
   end
 
-  def test_getprotobyname_result_not_expected
-    assert_equal(nil, Net::Proto.getprotobyname('foo'))
-    assert_equal(nil, Net::Proto.getprotobyname('tcpx'))
-    assert_equal(nil, Net::Proto.getprotobyname(''))
+  test "getprotobyname returns nil if the protocol is not found" do
+    assert_nil(Net::Proto.getprotobyname('foo'))
+    assert_nil(Net::Proto.getprotobyname('tcpx'))
+    assert_nil(Net::Proto.getprotobyname(''))
   end
 
-  def test_getprotobyname_expected_errors
+  test "getprotobyname raises a TypeError if an invalid arg is passed" do
     assert_raises(TypeError){ Net::Proto.getprotobyname(1) }
-    assert_raises(TypeError){ Net::Proto.getprotobyname(nil) }        
+    assert_raises(TypeError){ Net::Proto.getprotobyname(nil) }
   end
 
-  def test_getprotoent_basic
-    omit_if(@@windows, 'Skipped on MS Windows')
-
-    assert_respond_to(Net::Proto, :getprotoent)    
+  test "getprotoent basic functionality" do
+    omit_if(@@windows, 'getprotoent tests skipped on MS Windows')
+    assert_respond_to(Net::Proto, :getprotoent)
     assert_nothing_raised{ Net::Proto.getprotoent }
     assert_kind_of(Array, Net::Proto.getprotoent)
   end
 
-  def test_getprotoent
-    omit_if(@@windows, 'Skipped on MS Windows')
-
+  test "getprotoent method returns the expected results" do
+    omit_if(@@windows, 'getprotoent tests skipped on MS Windows')
     assert_kind_of(Struct::ProtoStruct, Net::Proto.getprotoent.first)
     assert_nil(Net::Proto.getprotoent{})
   end
 
-  def test_getprotoent_struct
-    omit_if(@@windows, 'Skipped on MS Windows')
-
+  test "struct returned by getprotoent method contains the expected data" do
+    omit_if(@@windows, 'getprotoent tests skipped on MS Windows')
     @protoent = Net::Proto.getprotoent.first
     assert_equal(['name', 'aliases', 'proto'], @protoent.members)
     assert_kind_of(String, @protoent.name)
@@ -109,28 +112,32 @@ class TC_Net_Proto < Test::Unit::TestCase
     assert_kind_of(Integer, @protoent.proto)
   end
 
-  def test_getprotoent_struct_aliases_member
-    omit_if(@@windows, 'Skipped on MS Windows')
-
+  test "all members of the aliases struct member are strings" do
+    omit_if(@@windows, 'getprotoent tests on MS Windows')
     @protoent = Net::Proto.getprotoent.first
     assert_true(@protoent.aliases.all?{ |e| e.is_a?(String) })
   end
 
-  def test_getprotoent_struct_frozen
-    omit_if(@@windows, 'Skipped on MS Windows')
-
+  test "struct returned by getprotoent method is frozen" do
+    omit_if(@@windows, 'getprotoent tests skipped on MS Windows')
     @protoent = Net::Proto.getprotoent.first
     assert_true(@protoent.frozen?)
   end
-   
-  def test_constructor_illegal
-    assert_raise(NoMethodError){ Net::Proto.new }      
+
+  test "there is no constructor" do
+    assert_raise(NoMethodError){ Net::Proto.new }
+  end
+
+  test "ffi functions are private" do
+    methods = Net::Proto.methods(false).map{ |m| m.to_sym }
+    assert_false(methods.include?(:setprotoent))
+    assert_false(methods.include?(:endprotoent))
   end
 
   def teardown
     @protoent = nil
   end
-   
+
   def self.shutdown
     @@protocols = nil
   end
