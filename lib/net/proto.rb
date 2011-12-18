@@ -26,12 +26,11 @@ module Net
       def read_array_of_string
         elements = []
 
-        psz = RUBY_PLATFORM == 'java' ? -1.size : self.class.size
         loc = self
 
         until ((element = loc.read_pointer).null?)
           elements << element.read_string
-          loc += psz
+          loc += FFI::Type::POINTER.size
         end
 
         elements
