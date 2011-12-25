@@ -45,9 +45,11 @@ module Net
 
     ProtoStruct = Struct.new('ProtoStruct', :name, :aliases, :proto)
 
+    # These should exist on every platform.
     attach_function 'getprotobyname', [:string], :pointer
     attach_function 'getprotobynumber', [:int], :pointer
 
+    # These are defined on most platforms, but not all.
     begin
       attach_function 'setprotoent', [:int], :void
       attach_function 'endprotoent', [], :void
@@ -63,13 +65,19 @@ module Net
     private_class_method :getprotobyname
     private_class_method :getprotobynumber
 
+    # We use these as our own method names in the public API, so we need
+    # to create aliases for them, then remove the original method name.
+    # Later, we'll use the aliases internally.
+    #
     class << self
       alias getprotobyname_c getprotobyname
       alias getprotobynumber_c getprotobynumber
       remove_method :getprotobyname
       remove_method :getprotobynumber
+    end
 
-      if self.respond_to?(:getprotoent, true)
+    if respond_to?(:getprotoent, true)
+      class << self
         alias getprotoent_c getprotoent
         remove_method :getprotoent
       end
