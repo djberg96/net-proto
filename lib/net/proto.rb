@@ -5,7 +5,13 @@ module Net
   # The Proto class serves as the base class for the various protocol methods.
   class Proto
     extend FFI::Library
-    ffi_lib(FFI::Library::LIBC)
+
+    ffi_lib FFI::Library::LIBC
+
+    if File::ALT_SEPARATOR
+      ffi_lib 'ws2_32'
+      ffi_convention :stdcall
+    end
 
     # The version of the net-proto library
     VERSION = '1.1.0'
@@ -39,25 +45,34 @@ module Net
 
     ProtoStruct = Struct.new('ProtoStruct', :name, :aliases, :proto)
 
-    attach_function 'setprotoent', [:int], :void
-    attach_function 'endprotoent', [], :void
     attach_function 'getprotobyname', [:string], :pointer
     attach_function 'getprotobynumber', [:int], :pointer
-    attach_function 'getprotoent', [], :pointer
 
-    private_class_method :setprotoent
-    private_class_method :endprotoent
+    begin
+      attach_function 'setprotoent', [:int], :void
+      attach_function 'endprotoent', [], :void
+      attach_function 'getprotoent', [], :pointer
+    rescue FFI::NotFoundError
+      # Ignore, not supported. Probably Windows.
+    else
+      private_class_method :setprotoent
+      private_class_method :endprotoent
+      private_class_method :getprotoent
+    end
+
     private_class_method :getprotobyname
     private_class_method :getprotobynumber
-    private_class_method :getprotoent
 
     class << self
       alias getprotobyname_c getprotobyname
       alias getprotobynumber_c getprotobynumber
-      alias getprotoent_c getprotoent
       remove_method :getprotobyname
       remove_method :getprotobynumber
-      remove_method :getprotoent
+
+      if self.respond_to?(:getprotoent, true)
+        alias getprotoent_c getprotoent
+        remove_method :getprotoent
+      end
     end
 
     public
@@ -92,11 +107,11 @@ module Net
       raise TypeError unless protocol.is_a?(String)
 
       begin
-        setprotoent(0)
+        setprotoent(0) if respond_to?(:setprotoent, true)
         ptr = getprotobyname_c(protocol)
         struct = ProtocolStruct.new(ptr) unless ptr.null?
       ensure
-        endprotoent()
+        endprotoent() if respond_to?(:endprotoent, true)
       end
 
       ptr.null? ? nil : struct[:p_proto]
@@ -114,11 +129,11 @@ module Net
       raise TypeError unless protocol.is_a?(Integer)
 
       begin
-        setprotoent(0)
+        setprotoent(0) if respond_to?(:setprotoent, true)
         ptr = getprotobynumber_c(protocol)
         struct = ProtocolStruct.new(ptr) unless ptr.null?
       ensure
-        endprotoent()
+        endprotoent() if respond_to?(:endprotoent, true)
       end
 
       ptr.null? ? nil: struct[:p_name]
@@ -139,6 +154,8 @@ module Net
     #   }
     #
     def self.getprotoent
+      raise NoMethodError unless respond_to?(:getprotoent, true)
+
       structs = block_given? ? nil : []
 
       begin
