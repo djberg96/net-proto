@@ -4,6 +4,11 @@ module Net
   class Proto
     extend FFI::Library
 
+    # The version of the net-proto library
+    VERSION = '1.1.0'
+
+    private_class_method :new
+
     class ProtocolStruct < FFI::Struct
       layout(
         :p_name,    :string,

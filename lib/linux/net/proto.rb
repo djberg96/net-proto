@@ -1,44 +1,13 @@
-require 'ffi'
+require 'net/proto/common'
 
 # The Net module serves as a namespace only.
 module Net
 
   # The Proto class serves as the base class for the various protocol methods.
   class Proto
-    extend FFI::Library
     ffi_lib FFI::Library::LIBC
 
-    # The version of the net-proto library
-    VERSION = '1.1.0'
-
-    private_class_method :new
-
     private
-
-    class ProtocolStruct < FFI::Struct
-      layout(
-        :p_name,    :string,
-        :p_aliases, :pointer,
-        :p_proto,   :int
-      )
-    end
-
-    class FFI::Pointer
-      def read_array_of_string
-        elements = []
-
-        loc = self
-
-        until ((element = loc.read_pointer).null?)
-          elements << element.read_string
-          loc += FFI::Type::POINTER.size
-        end
-
-         elements
-      end
-    end
-
-    ProtoStruct = Struct.new('ProtoStruct', :name, :aliases, :proto)
 
     attach_function :setprotoent, [:int], :void
     attach_function :endprotoent, [], :void
