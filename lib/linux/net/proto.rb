@@ -20,7 +20,7 @@ module Net
         :p_name,    :string,
         :p_aliases, :pointer,
         :p_proto,   :int
-      ) 
+      )
     end
 
     class FFI::Pointer
@@ -40,11 +40,14 @@ module Net
 
     ProtoStruct = Struct.new('ProtoStruct', :name, :aliases, :proto)
 
-    attach_function 'setprotoent', [:int], :void
-    attach_function 'endprotoent', [], :void
-    attach_function 'getprotobyname_r', [:string, :pointer, :pointer, :long, :pointer], :int
-    attach_function 'getprotobynumber_r', [:int, :pointer, :pointer, :long, :pointer], :int
-    attach_function 'getprotoent_r', [:pointer, :pointer, :long, :pointer], :int
+    attach_function :setprotoent, [:int], :void
+    attach_function :endprotoent, [], :void
+    attach_function :getprotobyname_r, [:string, :pointer, :pointer, :long, :pointer], :int
+    attach_function :getprotobynumber_r, [:int, :pointer, :pointer, :long, :pointer], :int
+    attach_function :getprotoent_r, [:pointer, :pointer, :long, :pointer], :int
+
+    private_class_method :setprotoent, :endprotoent, :getprotobyname_r
+    private_class_method :getprotobynumber_r, :getprotoent_r
 
     public
 
@@ -144,7 +147,7 @@ module Net
           break if int > 0 || qptr.null?
           buf = FFI::MemoryPointer.new(1024)
 
-          ffi_struct = ProtocolStruct.new(pptr) 
+          ffi_struct = ProtocolStruct.new(pptr)
 
           ruby_struct = ProtoStruct.new(
             ffi_struct[:p_name],
