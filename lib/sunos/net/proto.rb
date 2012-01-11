@@ -4,10 +4,6 @@ module Net
   class Proto
     ffi_lib 'socket'
 
-    VERSION = '1.1.0'
-
-    private_class_method :new
-
     attach_function :setprotoent, [:int], :void
     attach_function :endprotoent, [], :void
     attach_function :getprotobyname_r, [:string, :pointer, :pointer, :int], :pointer
