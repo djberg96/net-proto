@@ -3,11 +3,10 @@
 * README
 * Rakefile
 * net-proto.gemspec
-* doc/netproto.txt
+* lib/net/proto.rb
+* lib/net/proto/common.rb
+* lib/generic/net/proto.rb
+* lib/linux/net/proto.rb
+* lib/sunos/net/proto.rb
 * examples/example_net_proto.rb
-* ext/version.h
-* ext/generic/generic.c
-* ext/linux/linux.c
-* ext/sunos/sunos.c 
-* ext/windows/windows.c
 * test/test_net_proto.rb
