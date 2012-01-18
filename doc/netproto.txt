@@ -44,39 +44,36 @@ Proto.getprotoent{ |struct| ... }
     
 == Notes
    This module uses the reentrant (i.e. thread safe) functions on those
-   platforms that support them.  In some cases, e.g. FreeBSD and HP-UX, the
+   platforms that support them. In some cases, e.g. FreeBSD and HP-UX, the
    standard function names are reentrant by default (i.e. there is no '_r'
-   version, or it's not needed), so you will not see specific .c files for
-   all platforms.
+   version, or it's not needed).
 
    The 'setprotoent()' and 'endprotoent()' functions are not implemented as
-   separate method calls.  Rather, these are called internally by the various
+   separate method calls. Rather, these are called internally by the various
    methods, except on Windows, which does not support them.
 
    The 'getprotoent()' method is not supported on the MS Windows platform.
    It's not part of the API as of Windows XP.
    
 == Known Bugs
-   None that I'm aware of.  Please log any bug reports on the project page
-   at http://ruby-netutils.sf.net.
+  None that I'm aware of.  Please log any bug reports on the project page
+  at https://github.com/djberg96/net-proto.
 	
 == Future Plans
-   Use the asynchronous calls (WSAAsyncGetProtoByName and
-   WSAAsyncGetProtoByNumber) on MS Windows systems.
+  Use the asynchronous calls (WSAAsyncGetProtoByName and
+  WSAAsyncGetProtoByNumber) on MS Windows systems.
 	
 == Copyright
-   (C) 2003-2007 Daniel J. Berger
-   All rights reserved.
+  (C) 2003-2012 Daniel J. Berger
+  All rights reserved.
 	
 == Warranty
-   This package is provided "as is" and without any express or
-   implied warranties, including, without limitation, the implied
-   warranties of merchantability and fitness for a particular purpose.
+  This package is provided "as is" and without any express or
+  implied warranties, including, without limitation, the implied
+  warranties of merchantability and fitness for a particular purpose.
 	
 == License
-   Ruby's
+  Artistic 2.0
 	
 == Author
-   Daniel J. Berger
-   djberg96 at gmail dot com
-   imperator on IRC (Freenode)
+  Daniel J. Berger

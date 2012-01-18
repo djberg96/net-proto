@@ -2,6 +2,7 @@
 * MANIFEST
 * README
 * Rakefile
+* doc/netproto.txt
 * net-proto.gemspec
 * lib/net/proto.rb
 * lib/net/proto/common.rb
