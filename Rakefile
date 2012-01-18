@@ -9,14 +9,6 @@ namespace 'gem' do
   desc 'Create the net-proto gem'
   task :create => :clean do
     spec = eval(IO.read('net-proto.gemspec'))
-    case RbConfig::CONFIG['host_os']
-    when /linux/i
-      spec.require_path = 'lib/linux'
-      spec.platform = Gem::Platform::CURRENT
-    when /sunos|solaris/i
-      spec.require_path = 'lib/sunos'
-      spec.platform = Gem::Platform::CURRENT
-    end
     Gem::Builder.new(spec).build
   end
 
@@ -33,12 +25,6 @@ task :example do
 end
 
 Rake::TestTask.new do |t|
-  case RbConfig::CONFIG['host_os']
-  when /linux/i
-    t.libs.unshift 'lib/linux'
-  when /sunos|solaris/i
-    t.libs.unshift 'lib/sunos'
-  end
   t.warning = true
   t.verbose = true
 end
