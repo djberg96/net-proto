@@ -1,7 +1,6 @@
 require 'rake'
 require 'rake/testtask'
 require 'rbconfig'
-include Config
 
 namespace 'gem' do
   desc 'Remove any old gem files'
@@ -12,7 +11,7 @@ namespace 'gem' do
   desc 'Create the net-proto gem'
   task :create => :clean do
     spec = eval(IO.read('net-proto.gemspec'))
-    if Config::CONFIG['host_os'] =~ /linux/i
+    if RbConfig::CONFIG['host_os'] =~ /linux/i
       spec.require_path = 'lib/linux'
       spec.platform = Gem::Platform::CURRENT
     end
@@ -32,7 +31,7 @@ task :example do
 end
 
 Rake::TestTask.new do |t|
-  t.libs.unshift 'lib/linux' if Config::CONFIG['host_os'] =~ /linux/i
+  t.libs.unshift 'lib/linux' if RbConfig::CONFIG['host_os'] =~ /linux/i
   t.warning = true
   t.verbose = true
 end
