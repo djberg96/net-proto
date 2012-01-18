@@ -10,14 +10,13 @@ Gem::Specification.new do |gem|
   gem.platform   = Gem::Platform::RUBY
   gem.summary    = 'A Ruby interface for determining protocol information'
   gem.test_file  = 'test/test_net_proto.rb'
-  gem.has_rdoc   = true
   gem.files      = Dir['**/*'].reject{ |f| f.include?('git') }
 
   gem.rubyforge_project = 'sysutils'
   gem.extra_rdoc_files  = ['CHANGES', 'README', 'MANIFEST', 'doc/netproto.txt']
 
-  gem.add_dependency('ffi', '>= 0.6.3')
-  gem.add_development_dependency('test-unit', '>= 2.0.3')
+  gem.add_dependency('ffi', '>= 1.0.0')
+  gem.add_development_dependency('test-unit', '>= 2.2.0')
 
   gem.description = <<-EOF
     The net-proto library provides an interface for get protocol information
