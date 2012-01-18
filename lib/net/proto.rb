@@ -46,42 +46,24 @@ module Net
     ProtoStruct = Struct.new('ProtoStruct', :name, :aliases, :proto)
 
     # These should exist on every platform.
-    attach_function 'getprotobyname', [:string], :pointer
-    attach_function 'getprotobynumber', [:int], :pointer
+    attach_function :getprotobyname_c, :getprotobyname, [:string], :pointer
+    attach_function :getprotobynumber_c, :getprotobynumber, [:int], :pointer
 
     # These are defined on most platforms, but not all.
     begin
-      attach_function 'setprotoent', [:int], :void
-      attach_function 'endprotoent', [], :void
-      attach_function 'getprotoent', [], :pointer
+      attach_function :setprotoent, [:int], :void
+      attach_function :endprotoent, [], :void
+      attach_function :getprotoent_c, :getprotoent, [], :pointer
     rescue FFI::NotFoundError
       # Ignore, not supported. Probably Windows.
     else
       private_class_method :setprotoent
       private_class_method :endprotoent
-      private_class_method :getprotoent
+      private_class_method :getprotoent_c
     end
 
-    private_class_method :getprotobyname
-    private_class_method :getprotobynumber
-
-    # We use these as our own method names in the public API, so we need
-    # to create aliases for them, then remove the original method name.
-    # Later, we'll use the aliases internally.
-    #
-    class << self
-      alias getprotobyname_c getprotobyname
-      alias getprotobynumber_c getprotobynumber
-      remove_method :getprotobyname
-      remove_method :getprotobynumber
-    end
-
-    if respond_to?(:getprotoent, true)
-      class << self
-        alias getprotoent_c getprotoent
-        remove_method :getprotoent
-      end
-    end
+    private_class_method :getprotobyname_c
+    private_class_method :getprotobynumber_c
 
     public
 
