@@ -1,9 +1,9 @@
-== 1.1.0 - ???
-* Switched to FFI instead of C backend.
+== 1.1.0 - 18-Jan-2012
+* Switched to FFI instead of C backend. Now works with JRuby, too.
 * Added the generic get_protocol instance method that accepts either a
   string or an integer and does the right thing. This method should be
   preferred going forward.
-* Updates to the README.
+* Documentation updates.
 * Refactored the test suite to use features of test-unit 2.x.
 * Added a default rake task.
 
