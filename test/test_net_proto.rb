@@ -106,7 +106,7 @@ class TC_Net_Proto < Test::Unit::TestCase
   test "struct returned by getprotoent method contains the expected data" do
     omit_if(@@windows, 'getprotoent tests skipped on MS Windows')
     @protoent = Net::Proto.getprotoent.first
-    assert_equal(['name', 'aliases', 'proto'], @protoent.members)
+    assert_equal([:name, :aliases, :proto], @protoent.members)
     assert_kind_of(String, @protoent.name)
     assert_kind_of(Array, @protoent.aliases)
     assert_kind_of(Integer, @protoent.proto)
