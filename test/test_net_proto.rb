@@ -4,10 +4,8 @@
 # Test suite for net-proto - all platforms. This test suite should be run
 # via the 'rake test' task.
 ###########################################################################
-require 'rubygems'
-gem 'test-unit'
 require 'net/proto'
-require 'test/unit'
+require 'test-unit'
 
 class TC_Net_Proto < Test::Unit::TestCase
 
@@ -19,8 +17,6 @@ class TC_Net_Proto < Test::Unit::TestCase
       mobile ospf pim ipcomp vrrp sctp hopopt ipv6
       ipv6-route ipv6-frag esp ah ipv6-icmp ipv6-nonxt ipv6-opts
     /
-
-    @@windows = File::ALT_SEPARATOR
   end
 
   def setup
@@ -28,7 +24,7 @@ class TC_Net_Proto < Test::Unit::TestCase
   end
 
   test "version number is set to expected value" do
-    assert_equal('1.1.0', Net::Proto::VERSION)
+    assert_equal('1.1.1', Net::Proto::VERSION)
   end
 
   test "get_protocol method basic functionality" do
@@ -91,20 +87,17 @@ class TC_Net_Proto < Test::Unit::TestCase
   end
 
   test "getprotoent basic functionality" do
-    omit_if(@@windows, 'getprotoent tests skipped on MS Windows')
     assert_respond_to(Net::Proto, :getprotoent)
     assert_nothing_raised{ Net::Proto.getprotoent }
     assert_kind_of(Array, Net::Proto.getprotoent)
   end
 
   test "getprotoent method returns the expected results" do
-    omit_if(@@windows, 'getprotoent tests skipped on MS Windows')
     assert_kind_of(Struct::ProtoStruct, Net::Proto.getprotoent.first)
     assert_nil(Net::Proto.getprotoent{})
   end
 
   test "struct returned by getprotoent method contains the expected data" do
-    omit_if(@@windows, 'getprotoent tests skipped on MS Windows')
     @protoent = Net::Proto.getprotoent.first
     assert_equal([:name, :aliases, :proto], @protoent.members)
     assert_kind_of(String, @protoent.name)
@@ -113,13 +106,11 @@ class TC_Net_Proto < Test::Unit::TestCase
   end
 
   test "all members of the aliases struct member are strings" do
-    omit_if(@@windows, 'getprotoent tests on MS Windows')
     @protoent = Net::Proto.getprotoent.first
     assert_true(@protoent.aliases.all?{ |e| e.is_a?(String) })
   end
 
   test "struct returned by getprotoent method is frozen" do
-    omit_if(@@windows, 'getprotoent tests skipped on MS Windows')
     @protoent = Net::Proto.getprotoent.first
     assert_true(@protoent.frozen?)
   end
