@@ -8,13 +8,18 @@ namespace 'gem' do
   desc 'Create the net-proto gem'
   task :create => :clean do
     spec = eval(IO.read('net-proto.gemspec'))
-    Gem::Builder.new(spec).build
+    if Gem::VERSION.to_f < 2.0
+      Gem::Builder.new(spec).build
+    else
+      require 'rubygems/package'
+      Gem::Package.build(spec)
+    end
   end
 
   desc 'Install the net-proto gem'
   task :install => [:create] do
     file = Dir["net-proto*.gem"].last
-    sh "gem install #{file}"
+    sh "gem install -l #{file}"
   end
 end
 
