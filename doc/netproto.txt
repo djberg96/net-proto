@@ -39,8 +39,6 @@ Proto.getprotoent{ |struct| ... }
 	
    The fields are 'name' (a String), 'aliases' (an Array of String's,
    though often only one element), and 'proto' (a Fixnum).
-
-   This method is NOT supported on MS Windows.
     
 == Notes
    This module uses the reentrant (i.e. thread safe) functions on those
@@ -52,11 +50,12 @@ Proto.getprotoent{ |struct| ... }
    separate method calls. Rather, these are called internally by the various
    methods, except on Windows, which does not support them.
 
-   The 'getprotoent()' method is not supported on the MS Windows platform.
-   It's not part of the API as of Windows XP.
+   The 'getprotoent()' method on Windows is using Ruby to read directly from
+   your %SystemRoot%\system32\drivers\etc\protocol file. If you do not have
+   read access to that file, the method will fail.
    
 == Known Bugs
-  None that I'm aware of.  Please log any bug reports on the project page
+  None that I'm aware of. Please log any bug reports on the project page
   at https://github.com/djberg96/net-proto.
 	
 == Future Plans
@@ -64,7 +63,7 @@ Proto.getprotoent{ |struct| ... }
   WSAAsyncGetProtoByNumber) on MS Windows systems.
 	
 == Copyright
-  (C) 2003-2012 Daniel J. Berger
+  (C) 2003-2014 Daniel J. Berger
   All rights reserved.
 	
 == Warranty

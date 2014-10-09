@@ -26,10 +26,6 @@ Net::Proto.getprotoent do |ent|
   p ent
 end
 
-== MS Windows
-The Proto.getprotoent method is not supported on MS Windows because the
-underlying function isn't supported by the MS Windows API.
-
 == Why should I use this?
 Ruby has a predefined set of constants in socket.c in the general form of
 IPPROTO_XXX, Y.  However, using constants in this fashion can be unreliable
