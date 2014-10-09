@@ -1,3 +1,7 @@
+== 1.1.1 - 9-Oct-2014
+* Implemented getprotoent on Windows using pure Ruby.
+* Miscellaneous minor updates to the Rakefile, gemspec and docs.
+
 == 1.1.0 - 18-Jan-2012
 * Switched to FFI instead of C backend. Now works with JRuby, too.
 * Added the generic get_protocol instance method that accepts either a
