@@ -1,4 +1,4 @@
-require_relative '../../net/proto/common'
+require 'net/proto/common'
 
 # The Net module serves as a namespace only.
 module Net
@@ -7,11 +7,8 @@ module Net
     extend FFI::Library
 
     ffi_lib FFI::Library::LIBC
-
-    if File::ALT_SEPARATOR
-      ffi_lib 'ws2_32'
-      ffi_convention :stdcall
-    end
+    ffi_lib 'ws2_32'
+    ffi_convention :stdcall
 
     private
 
@@ -84,7 +81,7 @@ module Net
       ptr.null? ? nil: struct[:p_name]
     end
 
-    # In block form, yields each entry from /etc/protocols as a struct of type
+    # In block form, yields each entry from /etc/protocol as a struct of type
     # Proto::ProtoStruct. In non-block form, returns an array of structs.
     #
     # The fields are 'name' (a string), 'aliases' (an array of strings,
@@ -98,6 +95,10 @@ module Net
     #      p prot.proto
     #   }
     #
+    # Note that on Windows this code reads directly out of a %SystemRoot%
+    # subfolder using pure Ruby, so you will need read access or this method
+    # will fail.
+    #
     def self.getprotoent
       structs = block_given? ? nil : []
       file = ENV['SystemRoot'] + '/system32/drivers/etc/protocol'
@@ -107,7 +108,7 @@ module Net
         next if line.lstrip.size == 0 # Skip blank lines
         line = line.split
 
-        ruby_struct = ProtoStruct.new(line[0], line[2], line[1].to_i).freeze
+        ruby_struct = ProtoStruct.new(line[0], line[2].split(','), line[1].to_i).freeze
 
         if block_given?
           yield ruby_struct
@@ -118,12 +119,5 @@ module Net
 
       structs
     end
-  end
-end
-
-if $0 == __FILE__
-  include Net
-  Proto.getprotoent do |s|
-    p s
   end
 end
