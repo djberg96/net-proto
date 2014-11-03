@@ -1,3 +1,8 @@
+== 1.2.0 - 3-Nov-2014
+* The getprotobynumber and getprotobyname methods on MS Windows now accept
+  optional window and message arguments. If used, the method becomes
+  asynchronous and yields a block instead.
+
 == 1.1.1 - 9-Oct-2014
 * Implemented getprotoent on Windows using pure Ruby.
 * Miscellaneous minor updates to the Rakefile, gemspec and docs.
