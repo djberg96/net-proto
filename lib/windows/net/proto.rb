@@ -17,9 +17,13 @@ module Net
     attach_function :getprotobynumber_c, :getprotobynumber, [:int], :pointer
     attach_function :WSAAsyncGetProtoByName, [:uintptr_t, :uint, :string, :pointer, :pointer], :uintptr_t
     attach_function :WSAAsyncGetProtoByNumber, [:uintptr_t, :uint, :int, :pointer, :pointer], :uintptr_t
+    attach_function :WSAGetLastError, [], :int
 
     private_class_method :getprotobyname_c
     private_class_method :getprotobynumber_c
+    private_class_method :WSAAsyncGetProtoByName
+    private_class_method :WSAAsyncGetProtoByNumber
+    private_class_method :WSAGetLastError
 
     public
 
@@ -65,7 +69,7 @@ module Net
         handle = WSAAsyncGetProtoByName(hwnd, msg, protocol, struct, size_ptr)
 
         if handle == 0
-          raise SystemCallError.new('WSAAsyncGetProtoByName', FFI.errno)
+          raise SystemCallError.new('WSAAsyncGetProtoByName', WSAGetLastError())
         end
 
         struct[:p_proto]
@@ -104,7 +108,7 @@ module Net
         handle = WSAAsyncGetProtoByNumber(hwnd, msg, protocol, struct, size_ptr)
 
         if handle == 0
-          raise SystemCallError.new('WSAAsyncGetProtoByName', FFI.errno)
+          raise SystemCallError.new('WSAAsyncGetProtoByNumber', WSAGetLastError())
         end
 
         struct[:p_name]
