@@ -95,7 +95,7 @@ module Net
     #   Net::Proto.getprotobynumber(6)   # => 'tcp'
     #   Net::Proto.getprotobynumber(999) # => nil
     #
-    # # On MS Windows, you may also pass a window handle and a message (int)
+    # On MS Windows, you may also pass a window handle and a message (int)
     # that window will receive. If present, this method becomes asynchronous
     # and yields a block instead, with the protocol and handle.
     #
