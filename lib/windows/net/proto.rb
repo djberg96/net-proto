@@ -54,9 +54,12 @@ module Net
     #    Net::Proto.getprotobyname('bogus') # => nil
     #
     # On MS Windows, you may also pass a window handle and a message (int)
-    # that window will receive. If present, this method becomes asynchronous.
-    # Note that there is no way to cancel the asynchronous request using this
-    # method.
+    # that window will receive. If present, this method becomes asynchronous
+    # and yields a block instead, with the protocol and handle.
+    #
+    # Example:
+    #
+    #   Net::Proto.getprotobyname('tcp', SOME_WINDOW, SOME_MSG){ |num, handle| ... }
     #
     def self.getprotobyname(protocol, hwnd = 0, msg = 0)
       raise TypeError unless protocol.is_a?(String)
@@ -72,7 +75,7 @@ module Net
           raise SystemCallError.new('WSAAsyncGetProtoByName', WSAGetLastError())
         end
 
-        struct[:p_proto]
+        yield struct[:p_proto], handle
       else
         begin
           ptr = getprotobyname_c(protocol)
@@ -92,10 +95,13 @@ module Net
     #   Net::Proto.getprotobynumber(6)   # => 'tcp'
     #   Net::Proto.getprotobynumber(999) # => nil
     #
-    # On MS Windows, you may also pass a window handle and a message (int)
-    # that window will receive. If present, this method becomes asynchronous.
-    # Note that there is no way to cancel the asynchronous request using this
-    # method.
+    # # On MS Windows, you may also pass a window handle and a message (int)
+    # that window will receive. If present, this method becomes asynchronous
+    # and yields a block instead, with the protocol and handle.
+    #
+    # Example:
+    #
+    #   Net::Proto.getprotobynumber(6, SOME_WINDOW, SOME_MSG){ |name, handle| ... }
     #
     def self.getprotobynumber(protocol, hwnd = 0, msg = 0)
       raise TypeError unless protocol.is_a?(Integer)
@@ -111,7 +117,7 @@ module Net
           raise SystemCallError.new('WSAAsyncGetProtoByNumber', WSAGetLastError())
         end
 
-        struct[:p_name]
+        yield struct[:p_name], handle
       else
         begin
           ptr = getprotobynumber_c(protocol)
