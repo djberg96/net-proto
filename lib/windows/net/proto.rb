@@ -15,6 +15,8 @@ module Net
     # These should exist on every platform.
     attach_function :getprotobyname_c, :getprotobyname, [:string], :pointer
     attach_function :getprotobynumber_c, :getprotobynumber, [:int], :pointer
+    attach_function :WSAAsyncGetProtoByName, [:uintptr_t, :uint, :string, :pointer, :pointer], :uintptr_t
+    attach_function :WSAAsyncGetProtoByNumber, [:uintptr_t, :uint, :int, :pointer, :pointer], :uintptr_t
 
     private_class_method :getprotobyname_c
     private_class_method :getprotobynumber_c
@@ -47,17 +49,35 @@ module Net
     #    Net::Proto.getprotobyname('tcp')   # => 6
     #    Net::Proto.getprotobyname('bogus') # => nil
     #
-    def self.getprotobyname(protocol)
+    # On MS Windows, you may also pass a window handle and a message (int)
+    # that window will receive. If present, this method becomes asynchronous.
+    # Note that there is no way to cancel the asynchronous request using this
+    # method.
+    #
+    def self.getprotobyname(protocol, hwnd = 0, msg = 0)
       raise TypeError unless protocol.is_a?(String)
 
-      begin
-        ptr = getprotobyname_c(protocol)
-        struct = ProtocolStruct.new(ptr) unless ptr.null?
-      ensure
-        endprotoent() if respond_to?(:endprotoent, true)
-      end
+      if hwnd && hwnd > 0
+        struct = ProtocolStruct.new
+        size_ptr = FFI::MemoryPointer.new(:int)
+        size_ptr.write_int(struct.size)
 
-      ptr.null? ? nil : struct[:p_proto]
+        handle = WSAAsyncGetProtoByName(hwnd, msg, protocol, struct, size_ptr)
+
+        if handle == 0
+          raise SystemCallError.new('WSAAsyncGetProtoByName', FFI.errno)
+        end
+
+        struct[:p_proto]
+      else
+        begin
+          ptr = getprotobyname_c(protocol)
+          struct = ProtocolStruct.new(ptr) unless ptr.null?
+        ensure
+          endprotoent() if respond_to?(:endprotoent, true)
+        end
+        ptr.null? ? nil : struct[:p_proto]
+      end
     end
 
     # Given a protocol number, returns the corresponding string, or nil if
@@ -68,17 +88,36 @@ module Net
     #   Net::Proto.getprotobynumber(6)   # => 'tcp'
     #   Net::Proto.getprotobynumber(999) # => nil
     #
-    def self.getprotobynumber(protocol)
+    # On MS Windows, you may also pass a window handle and a message (int)
+    # that window will receive. If present, this method becomes asynchronous.
+    # Note that there is no way to cancel the asynchronous request using this
+    # method.
+    #
+    def self.getprotobynumber(protocol, hwnd = 0, msg = 0)
       raise TypeError unless protocol.is_a?(Integer)
 
-      begin
-        ptr = getprotobynumber_c(protocol)
-        struct = ProtocolStruct.new(ptr) unless ptr.null?
-      ensure
-        endprotoent() if respond_to?(:endprotoent, true)
-      end
+      if hwnd && hwnd > 0
+        struct = ProtocolStruct.new
+        size_ptr = FFI::MemoryPointer.new(:int)
+        size_ptr.write_int(struct.size)
 
-      ptr.null? ? nil: struct[:p_name]
+        handle = WSAAsyncGetProtoByNumber(hwnd, msg, protocol, struct, size_ptr)
+
+        if handle == 0
+          raise SystemCallError.new('WSAAsyncGetProtoByName', FFI.errno)
+        end
+
+        struct[:p_name]
+      else
+        begin
+          ptr = getprotobynumber_c(protocol)
+          struct = ProtocolStruct.new(ptr) unless ptr.null?
+        ensure
+          endprotoent() if respond_to?(:endprotoent, true)
+        end
+
+        ptr.null? ? nil: struct[:p_name]
+      end
     end
 
     # In block form, yields each entry from /etc/protocol as a struct of type
