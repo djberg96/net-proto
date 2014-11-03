@@ -58,10 +58,6 @@ Proto.getprotoent{ |struct| ... }
   None that I'm aware of. Please log any bug reports on the project page
   at https://github.com/djberg96/net-proto.
 	
-== Future Plans
-  Use the asynchronous calls (WSAAsyncGetProtoByName and
-  WSAAsyncGetProtoByNumber) on MS Windows systems.
-	
 == Copyright
   (C) 2003-2014 Daniel J. Berger
   All rights reserved.
