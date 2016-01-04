@@ -1,3 +1,8 @@
+== 1.2.1 - 4-Jan-2016
+* This gem is now signed.
+* The gem related tasks in the Rakefile now assume Rubygems 2.x.
+* Added a net-proto.rb file for convenience.
+
 == 1.2.0 - 3-Nov-2014
 * The getprotobynumber and getprotobyname methods on MS Windows now accept
   optional window and message arguments. If used, the method becomes
