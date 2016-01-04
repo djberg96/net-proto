@@ -5,7 +5,7 @@ module Net
     extend FFI::Library
 
     # The version of the net-proto library
-    VERSION = '1.2.0'
+    VERSION = '1.2.1'
 
     private_class_method :new
 
