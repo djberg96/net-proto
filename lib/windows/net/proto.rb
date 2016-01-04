@@ -126,7 +126,7 @@ module Net
           endprotoent() if respond_to?(:endprotoent, true)
         end
 
-        ptr.null? ? nil: struct[:p_name]
+        ptr.null? ? nil : struct[:p_name]
       end
     end
 
