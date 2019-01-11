@@ -24,7 +24,8 @@ class TC_Net_Proto < Test::Unit::TestCase
   end
 
   test "version number is set to expected value" do
-    assert_equal('1.2.1', Net::Proto::VERSION)
+    assert_equal('1.3.0', Net::Proto::VERSION)
+    assert_true(Net::Proto::VERSION.frozen?)
   end
 
   test "get_protocol method basic functionality" do
