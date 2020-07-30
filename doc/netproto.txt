@@ -59,7 +59,7 @@ Proto.getprotoent{ |struct| ... }
   at https://github.com/djberg96/net-proto.
 	
 == Copyright
-  (C) 2003-2019 Daniel J. Berger
+  (C) 2003-2020 Daniel J. Berger
   All rights reserved.
 	
 == Warranty
