@@ -1,6 +1,7 @@
 require 'rake'
 require 'rake/testtask'
 require 'rake/clean'
+require 'rspec/core/rake_task'
 
 CLEAN.include('**/*.gem', '**/*.rbx', '**/*.rbc')
 
@@ -25,9 +26,8 @@ task :example do
   ruby '-Ilib examples/example_net_proto.rb'
 end
 
-Rake::TestTask.new do |t|
-  t.warning = true
-  t.verbose = true
+RSpec::Core::RakeTask.new(:spec) do |t|
+  t.pattern = ['spec/net_proto_spec.rb']
 end
 
-task :default => :test
+task :default => :spec
