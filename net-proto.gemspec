@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.email      = 'djberg96@gmail.com'
   spec.homepage   = 'https://github.com/djberg96/net-proto'
   spec.summary    = 'A Ruby interface for determining protocol information'
-  spec.test_file  = 'test/test_net_proto.rb'
+  spec.test_file  = 'spec/net_proto_spec.rb'
   spec.files      = Dir['**/*'].reject{ |f| f.include?('git') }
   spec.cert_chain = Dir['certs/*']
 
