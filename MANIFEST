@@ -13,4 +13,4 @@
 * lib/linux/net/proto.rb
 * lib/sunos/net/proto.rb
 * examples/example_net_proto.rb
-* test/test_net_proto.rb
+* spec/net_proto_spec.rb
