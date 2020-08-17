@@ -42,7 +42,7 @@ RSpec.describe Net::Proto do
 
   example "getprotobynumber basic functionality" do
     expect(Net::Proto).to respond_to(:getprotobynumber)
-    expect{ 0.upto(132){ |n| Net::Proto.getprotobynumber(n) }.not_to raise_error
+    expect{ 0.upto(132){ |n| Net::Proto.getprotobynumber(n) } }.not_to raise_error
     expect(Net::Proto.getprotobynumber(1)).to be_kind_of(String)
   end
 
@@ -63,7 +63,7 @@ RSpec.describe Net::Proto do
 
   example "getprotobyname method basic functionality" do
     expect(Net::Proto).to respond_to(:getprotobyname)
-    protocols.each{ |n| expect{ Net::Proto.getprotobyname(n) }.not_to raise_error
+    protocols.each{ |n| expect{ Net::Proto.getprotobyname(n) }.not_to raise_error }
   end
 
   example "getprotobyname returns the expected result" do
@@ -103,7 +103,7 @@ RSpec.describe Net::Proto do
 
   example "all members of the aliases struct member are strings" do
     protoent = Net::Proto.getprotoent.first
-    expect(protoent.aliases.all?{ |e| e.is_a?(String) }).to be_true
+    expect(protoent.aliases.all?{ |e| e.is_a?(String) }).to eq(true)
   end
 
   example "struct returned by getprotoent method is frozen" do
@@ -116,7 +116,7 @@ RSpec.describe Net::Proto do
   end
 
   example "ffi functions are private" do
-    methods = Net::Proto.methods(false).map{ |m| m.to_sym }
+    methods = Net::Proto.methods(false)
     expect(methods.include?(:setprotoent)).to eq(false)
     expect(methods.include?(:endprotoent)).to eq(false)
   end
