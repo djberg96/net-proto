@@ -13,8 +13,6 @@ module Net
       ffi_convention :stdcall
     end
 
-    private
-
     # These should exist on every platform.
     attach_function :getprotobyname_c, :getprotobyname, [:string], :pointer
     attach_function :getprotobynumber_c, :getprotobynumber, [:int], :pointer
@@ -34,8 +32,6 @@ module Net
 
     private_class_method :getprotobyname_c
     private_class_method :getprotobynumber_c
-
-    public
 
     # If given a protocol string, returns the corresponding number. If
     # given a protocol number, returns the corresponding string.
