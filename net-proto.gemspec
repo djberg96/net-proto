@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.homepage   = 'https://github.com/djberg96/net-proto'
   spec.summary    = 'A Ruby interface for determining protocol information'
   spec.test_file  = 'spec/net_proto_spec.rb'
-  spec.files      = Dir['**/*'].reject{ |f| f.include?('git') }
+  spec.files      = Dir['**/*'].reject{ |f| f.include?('git') || f.include?('rubocop') }
   spec.cert_chain = Dir['certs/*']
 
   spec.extra_rdoc_files  = ['CHANGES', 'README', 'MANIFEST', 'doc/netproto.txt']
