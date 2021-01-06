@@ -7,8 +7,6 @@ module Net
   class Proto
     ffi_lib FFI::Library::LIBC
 
-    private
-
     attach_function :setprotoent, [:int], :void
     attach_function :endprotoent, [], :void
     attach_function :getprotobyname_r, [:string, :pointer, :pointer, :long, :pointer], :int
@@ -17,8 +15,6 @@ module Net
 
     private_class_method :setprotoent, :endprotoent, :getprotobyname_r
     private_class_method :getprotobynumber_r, :getprotoent_r
-
-    public
 
     # If given a protocol string, returns the corresponding number. If
     # given a protocol number, returns the corresponding string.
