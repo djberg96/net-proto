@@ -10,8 +10,6 @@ module Net
     ffi_lib 'ws2_32'
     ffi_convention :stdcall
 
-    private
-
     # These should exist on every platform.
     attach_function :getprotobyname_c, :getprotobyname, [:string], :pointer
     attach_function :getprotobynumber_c, :getprotobynumber, [:int], :pointer
@@ -24,8 +22,6 @@ module Net
     private_class_method :WSAAsyncGetProtoByName
     private_class_method :WSAAsyncGetProtoByNumber
     private_class_method :WSAGetLastError
-
-    public
 
     # If given a protocol string, returns the corresponding number. If
     # given a protocol number, returns the corresponding string.

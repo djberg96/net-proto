@@ -16,8 +16,6 @@ module Net
     private_class_method :setprotoent, :endprotoent, :getprotobyname_r
     private_class_method :getprotobynumber_r, :getprotoent_r
 
-    public
-
     # If given a protocol string, returns the corresponding number. If
     # given a protocol number, returns the corresponding string.
     #
