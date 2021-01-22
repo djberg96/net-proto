@@ -1,7 +1,7 @@
 ###########################################################################
-# net_netproto_spec.rb
+# net_proto_spec.rb
 #
-# Test suite for net-proto  all platforms. This test suite should be run
+# Test suite for net-proto on all platforms. This test suite should be run
 # via the 'rake spec' task.
 ###########################################################################
 require 'net/proto'
