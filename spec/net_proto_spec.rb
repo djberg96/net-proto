@@ -20,7 +20,7 @@ RSpec.describe Net::Proto do
 
   example "version number is set to expected value" do
     expect(Net::Proto::VERSION).to eq('1.4.0')
-    expect(Net::Proto::VERSION.frozen?).to eq(true)
+    expect(Net::Proto::VERSION).to be_frozen
   end
 
   example "get_protocol method basic functionality" do
