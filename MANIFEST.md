@@ -1,7 +1,7 @@
-* CHANGES
+* CHANGES.md
 * LICENSE
-* MANIFEST
-* README
+* MANIFEST.md
+* README.md
 * Rakefile
 * doc/netproto.txt
 * net-proto.gemspec
