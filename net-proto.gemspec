@@ -2,7 +2,7 @@ require 'rubygems'
 
 Gem::Specification.new do |spec|
   spec.name       = 'net-proto'
-  spec.version    = '1.4.0'
+  spec.version    = '1.4.1'
   spec.author     = 'Daniel J. Berger'
   spec.license    = 'Apache-2.0'
   spec.email      = 'djberg96@gmail.com'
@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.files      = Dir['**/*'].reject{ |f| f.include?('git') || f.include?('rubocop') }
   spec.cert_chain = Dir['certs/*']
 
-  spec.extra_rdoc_files  = ['CHANGES', 'README', 'MANIFEST', 'doc/netproto.txt']
+  spec.extra_rdoc_files = ['doc/netproto.rdoc']
 
   spec.add_dependency('ffi', '~> 1.0')
   spec.add_development_dependency('rspec', '~> 3.9')

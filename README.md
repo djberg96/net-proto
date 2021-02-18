@@ -1,16 +1,17 @@
-== Description
+## Description
 The net-proto package provides a way to get protocol information.
 
 This is a wrapper for the getprotobyname(), getprotobynumber() and
 the getprotoent() functions.
 
-== Installation
-gem install net-proto
+## Installation
+`gem install net-proto`
 
-== Prerequisites
-ffi 1.0.0 or later.
+## Prerequisites
+* ffi 1.0.0 or later.
 
-== Synopsis
+## Synopsis
+```ruby
 require 'net/proto'
 
 # Using generic method
@@ -25,13 +26,14 @@ Net::Proto.getprotobyname('tcp') # => 6
 Net::Proto.getprotoent do |ent|
   p ent
 end
+```
 
-== Why should I use this?
+## Why should I use this?
 Ruby has a predefined set of constants in socket.c in the general form of
 IPPROTO_XXX, Y.  However, using constants in this fashion can be unreliable
 because it's easy to define your own protocols (I set 'echo' to 7, for
 example), or to modify/delete entries in /etc/protocols.
 
-== Further Documentation
+## Further Documentation
 See the 'netproto.txt' file under the 'doc' directory for more details.  There
 is also an example under the 'examples' directory.

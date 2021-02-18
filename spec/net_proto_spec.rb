@@ -19,7 +19,7 @@ RSpec.describe Net::Proto do
   end
 
   example "version number is set to expected value" do
-    expect(Net::Proto::VERSION).to eq('1.4.0')
+    expect(Net::Proto::VERSION).to eq('1.4.1')
     expect(Net::Proto::VERSION).to be_frozen
   end
 
