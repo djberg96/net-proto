@@ -1,8 +1,8 @@
 ## Description
 The net-proto package provides a way to get protocol information.
 
-This is a wrapper for the getprotobyname(), getprotobynumber() and
-the getprotoent() functions.
+This is a wrapper for the `getprotobyname`, `getprotobynumber` and
+the `getprotoent` functions.
 
 ## Installation
 `gem install net-proto`
