@@ -2,7 +2,7 @@
 The net-proto package provides a way to get protocol information.
 
 This is a wrapper for the `getprotobyname`, `getprotobynumber` and
-the `getprotoent` functions.
+the `getprotoent` C functions.
 
 ## Installation
 `gem install net-proto`
@@ -12,7 +12,7 @@ the `getprotoent` functions.
 
 ## Synopsis
 ```ruby
-require 'net/proto'
+require 'net/proto' # or 'net-proto'
 
 # Using generic method
 Net::Proto.get_protocol(1)      # => 'icmp'
@@ -35,5 +35,5 @@ because it's easy to define your own protocols (I set 'echo' to 7, for
 example), or to modify/delete entries in /etc/protocols.
 
 ## Further Documentation
-See the 'netproto.txt' file under the 'doc' directory for more details.  There
+See the 'netproto.rdoc' file under the 'doc' directory for more details.  There
 is also an example under the 'examples' directory.
