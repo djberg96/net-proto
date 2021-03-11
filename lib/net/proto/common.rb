@@ -10,11 +10,19 @@ module Net
     private_class_method :new
 
     class ProtocolStruct < FFI::Struct
-      layout(
-        :p_name,    :string,
-        :p_aliases, :pointer,
-        :p_proto,   :int
-      )
+      if File::ALT_SEPARATOR
+        layout(
+          :p_name,    :string,
+          :p_aliases, :pointer,
+          :p_proto,   :short
+        )
+      else
+        layout(
+          :p_name,    :string,
+          :p_aliases, :pointer,
+          :p_proto,   :int
+        )
+      end
     end
 
     class FFI::Pointer
