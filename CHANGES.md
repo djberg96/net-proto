@@ -1,3 +1,6 @@
+## 1.4.2 - 15-Mar-2021
+* Properly set the p_proto type (short, not int) for Windows.
+
 ## 1.4.1 - 18-Feb-2021
 * Switch rdoc format to markdown where appropriate.
 
