@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'net/proto/common'
 
 # The Net module serves as a namespace only.
@@ -92,7 +94,7 @@ module Net
         endprotoent() if respond_to?(:endprotoent, true)
       end
 
-      ptr.null? ? nil: struct[:p_name]
+      ptr.null? ? nil : struct[:p_name]
     end
 
     # In block form, yields each entry from /etc/protocols as a struct of type

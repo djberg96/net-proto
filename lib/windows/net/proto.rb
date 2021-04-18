@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'net/proto/common'
 
 # The Net module serves as a namespace only.
@@ -13,8 +15,8 @@ module Net
     # These should exist on every platform.
     attach_function :getprotobyname_c, :getprotobyname, [:string], :pointer
     attach_function :getprotobynumber_c, :getprotobynumber, [:int], :pointer
-    attach_function :WSAAsyncGetProtoByName, [:uintptr_t, :uint, :string, :pointer, :pointer], :uintptr_t
-    attach_function :WSAAsyncGetProtoByNumber, [:uintptr_t, :uint, :int, :pointer, :pointer], :uintptr_t
+    attach_function :WSAAsyncGetProtoByName, %i[uintptr_t uint string pointer pointer], :uintptr_t
+    attach_function :WSAAsyncGetProtoByNumber, %i[uintptr_t uint int pointer pointer], :uintptr_t
     attach_function :WSAGetLastError, [], :int
 
     private_class_method :getprotobyname_c
@@ -67,9 +69,7 @@ module Net
 
         handle = WSAAsyncGetProtoByName(hwnd, msg, protocol, struct, size_ptr)
 
-        if handle == 0
-          raise SystemCallError.new('WSAAsyncGetProtoByName', WSAGetLastError())
-        end
+        raise SystemCallError.new('WSAAsyncGetProtoByName', WSAGetLastError()) if handle == 0
 
         yield struct[:p_proto], handle
       else
@@ -109,9 +109,7 @@ module Net
 
         handle = WSAAsyncGetProtoByNumber(hwnd, msg, protocol, struct, size_ptr)
 
-        if handle == 0
-          raise SystemCallError.new('WSAAsyncGetProtoByNumber', WSAGetLastError())
-        end
+        raise SystemCallError.new('WSAAsyncGetProtoByNumber', WSAGetLastError()) if handle == 0
 
         yield struct[:p_name], handle
       else
@@ -146,11 +144,11 @@ module Net
     #
     def self.getprotoent
       structs = block_given? ? nil : []
-      file = ENV['SystemRoot'] + '/system32/drivers/etc/protocol'
+      file = File.join(ENV['SystemRoot'], '/system32/drivers/etc/protocol')
 
       IO.foreach(file) do |line|
         next if line.lstrip[0] == '#' # Skip comments
-        next if line.lstrip.size == 0 # Skip blank lines
+        next if line.lstrip.empty? # Skip blank lines
         line = line.split
 
         ruby_struct = ProtoStruct.new(line[0], line[2].split(','), line[1].to_i).freeze

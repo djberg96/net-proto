@@ -1,17 +1,18 @@
+# frozen_string_literal: true
+
 require 'net/proto/common'
 
 # The Net module serves as a namespace only.
 module Net
-
   # The Proto class serves as the base class for the various protocol methods.
   class Proto
     ffi_lib 'socket'
 
     attach_function :setprotoent, [:int], :void
     attach_function :endprotoent, [], :void
-    attach_function :getprotobyname_r, [:string, :pointer, :pointer, :int], :pointer
-    attach_function :getprotobynumber_r, [:int, :pointer, :pointer, :int], :pointer
-    attach_function :getprotoent_r, [:pointer, :pointer, :int], :pointer
+    attach_function :getprotobyname_r, %i[string pointer pointer int], :pointer
+    attach_function :getprotobynumber_r, %i[int pointer pointer int], :pointer
+    attach_function :getprotoent_r, %i[pointer pointer int], :pointer
 
     private_class_method :setprotoent, :endprotoent, :getprotobyname_r
     private_class_method :getprotobynumber_r, :getprotoent_r
