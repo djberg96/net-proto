@@ -152,7 +152,7 @@ module Net
 
       IO.foreach(file) do |line|
         next if line.lstrip[0] == '#' # Skip comments
-        next if line.lstrip.size == 0 # Skip blank lines
+        next if line.lstrip.empty? # Skip blank lines
         line = line.split
 
         ruby_struct = ProtoStruct.new(line[0], line[2].split(','), line[1].to_i).freeze
