@@ -6,6 +6,8 @@ Style/MethodCallWithoutArgsParentheses:
   Enabled: false
 Style/NumericPredicate:
   Enabled: false
+Style/ClassAndModuleChildren:
+  Enabled: false
 Layout/EmptyLineAfterGuardClause:
   Enabled: false
 Metrics/AbcSize:
