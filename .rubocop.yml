@@ -10,6 +10,8 @@ Style/ClassAndModuleChildren:
   Enabled: false
 Layout/EmptyLineAfterGuardClause:
   Enabled: false
+Layout/CaseIndentation:
+  IndentOneStep: true
 Metrics/AbcSize:
   Enabled: false
 Metrics/MethodLength:
