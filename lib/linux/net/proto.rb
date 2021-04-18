@@ -4,7 +4,6 @@ require 'net/proto/common'
 
 # The Net module serves as a namespace only.
 module Net
-
   # The Proto class serves as the base class for the various protocol methods.
   class Proto
     ffi_lib FFI::Library::LIBC
