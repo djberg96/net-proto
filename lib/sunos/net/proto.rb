@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'net/proto/common'
 
 # The Net module serves as a namespace only.
