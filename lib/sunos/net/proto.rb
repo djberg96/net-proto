@@ -9,9 +9,9 @@ module Net
 
     attach_function :setprotoent, [:int], :void
     attach_function :endprotoent, [], :void
-    attach_function :getprotobyname_r, [:string, :pointer, :pointer, :int], :pointer
-    attach_function :getprotobynumber_r, [:int, :pointer, :pointer, :int], :pointer
-    attach_function :getprotoent_r, [:pointer, :pointer, :int], :pointer
+    attach_function :getprotobyname_r, %i[string pointer pointer int], :pointer
+    attach_function :getprotobynumber_r, %i[int pointer pointer int], :pointer
+    attach_function :getprotoent_r, %i[pointer pointer int], :pointer
 
     private_class_method :setprotoent, :endprotoent, :getprotobyname_r
     private_class_method :getprotobynumber_r, :getprotoent_r

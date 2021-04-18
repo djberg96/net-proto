@@ -13,8 +13,8 @@ module Net
     # These should exist on every platform.
     attach_function :getprotobyname_c, :getprotobyname, [:string], :pointer
     attach_function :getprotobynumber_c, :getprotobynumber, [:int], :pointer
-    attach_function :WSAAsyncGetProtoByName, [:uintptr_t, :uint, :string, :pointer, :pointer], :uintptr_t
-    attach_function :WSAAsyncGetProtoByNumber, [:uintptr_t, :uint, :int, :pointer, :pointer], :uintptr_t
+    attach_function :WSAAsyncGetProtoByName, %i[uintptr_t uint string pointer pointer], :uintptr_t
+    attach_function :WSAAsyncGetProtoByNumber, %i[uintptr_t uint int pointer pointer], :uintptr_t
     attach_function :WSAGetLastError, [], :int
 
     private_class_method :getprotobyname_c
