@@ -69,9 +69,7 @@ module Net
 
         handle = WSAAsyncGetProtoByName(hwnd, msg, protocol, struct, size_ptr)
 
-        if handle == 0
-          raise SystemCallError.new('WSAAsyncGetProtoByName', WSAGetLastError())
-        end
+        raise SystemCallError.new('WSAAsyncGetProtoByName', WSAGetLastError()) if handle == 0
 
         yield struct[:p_proto], handle
       else
@@ -111,9 +109,7 @@ module Net
 
         handle = WSAAsyncGetProtoByNumber(hwnd, msg, protocol, struct, size_ptr)
 
-        if handle == 0
-          raise SystemCallError.new('WSAAsyncGetProtoByNumber', WSAGetLastError())
-        end
+        raise SystemCallError.new('WSAAsyncGetProtoByNumber', WSAGetLastError()) if handle == 0
 
         yield struct[:p_name], handle
       else
