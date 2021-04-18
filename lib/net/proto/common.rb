@@ -7,7 +7,7 @@ module Net
     extend FFI::Library
 
     # The version of the net-proto library
-    VERSION = '1.4.2'.freeze
+    VERSION = '1.4.2'
 
     private_class_method :new
 
