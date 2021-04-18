@@ -2,3 +2,17 @@ AllCops:
   NewCops: enable
 Lint/AssignmentInCondition:
   Enabled: false
+Style/MethodCallWithoutArgsParentheses:
+  Enabled: false
+Style/NumericPredicate:
+  Enabled: false
+Layout/EmptyLineAfterGuardClause:
+  Enabled: false
+Metrics/AbcSize:
+  Enabled: false
+Metrics/MethodLength:
+  Enabled: false
+Metrics/CyclomaticComplexity:
+  Enabled: false
+Metrics/PerceivedComplexity:
+  Enabled: false
