@@ -18,3 +18,6 @@ Metrics/CyclomaticComplexity:
   Enabled: false
 Metrics/PerceivedComplexity:
   Enabled: false
+Naming/FileName:
+  Exclude:
+    - 'lib/net-proto.rb'
