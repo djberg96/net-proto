@@ -1,5 +1,7 @@
-## 1.4.2 - 15-Mar-2021
+## 1.4.2 - 3-Aug-2021
 * Properly set the p_proto type (short, not int) for Windows.
+* Minor updates suggested by rubocop.
+* Added a Gemfile.
 
 ## 1.4.1 - 18-Feb-2021
 * Switch rdoc format to markdown where appropriate.
