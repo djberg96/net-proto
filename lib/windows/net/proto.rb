@@ -146,7 +146,7 @@ module Net
       structs = block_given? ? nil : []
       file = File.join(ENV['SystemRoot'], '/system32/drivers/etc/protocol')
 
-      IO.foreach(file) do |line|
+      File.foreach(file) do |line|
         next if line.lstrip[0] == '#' # Skip comments
         next if line.lstrip.empty? # Skip blank lines
         line = line.split
