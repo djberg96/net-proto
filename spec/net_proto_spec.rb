@@ -92,7 +92,7 @@ RSpec.describe Net::Proto do
 
   example 'getprotoent method returns the expected results' do
     expect(Net::Proto.getprotoent.first).to be_kind_of(Struct::ProtoStruct)
-    expect(Net::Proto.getprotoent{}).to be_nil
+    expect(Net::Proto.getprotoent{}).to be_nil # nil if block provided
   end
 
   example 'struct returned by getprotoent method contains the expected data' do

@@ -18,6 +18,8 @@ Layout/SpaceBeforeBlockBraces:
   Enabled: false
 Metrics/AbcSize:
   Enabled: false
+Metrics/BlockLength:
+  IgnoredMethods: ['describe', 'context']
 Metrics/MethodLength:
   Enabled: false
 Metrics/CyclomaticComplexity:
