@@ -7,6 +7,9 @@ the `getprotoent` C functions.
 ## Installation
 `gem install net-proto`
 
+## Adding the trusted cert
+`gem cert --add <(curl -Ls https://raw.githubusercontent.com/djberg96/net-proto/main/certs/djberg96_pub.pem)`
+
 ## Prerequisites
 * ffi 1.0.0 or later.
 
