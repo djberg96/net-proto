@@ -26,77 +26,77 @@ RSpec.describe Net::Proto do
   end
 
   example 'get_protocol method basic functionality' do
-    expect(Net::Proto).to respond_to(:get_protocol)
+    expect(described_class).to respond_to(:get_protocol)
   end
 
   example 'get_protocol method accepts a string or a number' do
-    expect{ Net::Proto.get_protocol(1) }.not_to raise_error
-    expect{ Net::Proto.get_protocol('tcp') }.not_to raise_error
+    expect{ described_class.get_protocol(1) }.not_to raise_error
+    expect{ described_class.get_protocol('tcp') }.not_to raise_error
   end
 
   example 'get_protocol returns nil if protocol not found' do
-    expect(Net::Proto.get_protocol(9999999)).to be_nil
+    expect(described_class.get_protocol(9999999)).to be_nil
   end
 
   example 'get_protocol fails if an invalid type is passed' do
-    expect{ Net::Proto.get_protocol([]) }.to raise_error(TypeError)
+    expect{ described_class.get_protocol([]) }.to raise_error(TypeError)
   end
 
   example 'getprotobynumber basic functionality' do
-    expect(Net::Proto).to respond_to(:getprotobynumber)
-    expect{ 0.upto(132){ |n| Net::Proto.getprotobynumber(n) } }.not_to raise_error
-    expect(Net::Proto.getprotobynumber(1)).to be_kind_of(String)
+    expect(described_class).to respond_to(:getprotobynumber)
+    expect{ 0.upto(132){ |n| described_class.getprotobynumber(n) } }.not_to raise_error
+    expect(described_class.getprotobynumber(1)).to be_kind_of(String)
   end
 
   example 'getprotobynumber returns the expected result' do
-    expect(Net::Proto.getprotobynumber(1)).to eq('icmp')
-    expect(Net::Proto.getprotobynumber(6)).to eq('tcp')
+    expect(described_class.getprotobynumber(1)).to eq('icmp')
+    expect(described_class.getprotobynumber(6)).to eq('tcp')
   end
 
   example 'getprotobynumber returns nil if not found' do
-    expect(Net::Proto.getprotobynumber(9999999)).to eq(nil)
-    expect(Net::Proto.getprotobynumber(-1)).to eq(nil)
+    expect(described_class.getprotobynumber(9999999)).to eq(nil)
+    expect(described_class.getprotobynumber(-1)).to eq(nil)
   end
 
   example 'getprotobynumber raises a TypeError if a non-numeric arg is used' do
-    expect{ Net::Proto.getprotobynumber('foo') }.to raise_error(TypeError)
-    expect{ Net::Proto.getprotobynumber(nil) }.to raise_error(TypeError)
+    expect{ described_class.getprotobynumber('foo') }.to raise_error(TypeError)
+    expect{ described_class.getprotobynumber(nil) }.to raise_error(TypeError)
   end
 
   example 'getprotobyname method basic functionality' do
-    expect(Net::Proto).to respond_to(:getprotobyname)
-    protocols.each{ |n| expect{ Net::Proto.getprotobyname(n) }.not_to raise_error }
+    expect(described_class).to respond_to(:getprotobyname)
+    protocols.each{ |n| expect{ described_class.getprotobyname(n) }.not_to raise_error }
   end
 
   example 'getprotobyname returns the expected result' do
-    expect(Net::Proto.getprotobyname('icmp')).to eq(1)
-    expect(Net::Proto.getprotobyname('tcp')).to eq(6)
+    expect(described_class.getprotobyname('icmp')).to eq(1)
+    expect(described_class.getprotobyname('tcp')).to eq(6)
   end
 
   example 'getprotobyname returns nil if the protocol is not found' do
-    expect(Net::Proto.getprotobyname('foo')).to be_nil
-    expect(Net::Proto.getprotobyname('tcpx')).to be_nil
-    expect(Net::Proto.getprotobyname('')).to be_nil
+    expect(described_class.getprotobyname('foo')).to be_nil
+    expect(described_class.getprotobyname('tcpx')).to be_nil
+    expect(described_class.getprotobyname('')).to be_nil
   end
 
   example 'getprotobyname raises a TypeError if an invalid arg is passed' do
-    expect{ Net::Proto.getprotobyname(1) }.to raise_error(TypeError)
-    expect{ Net::Proto.getprotobyname(nil) }.to raise_error(TypeError)
+    expect{ described_class.getprotobyname(1) }.to raise_error(TypeError)
+    expect{ described_class.getprotobyname(nil) }.to raise_error(TypeError)
   end
 
   example 'getprotoent basic functionality' do
-    expect(Net::Proto).to respond_to(:getprotoent)
-    expect{ Net::Proto.getprotoent }.not_to raise_error
-    expect(Net::Proto.getprotoent).to be_kind_of(Array)
+    expect(described_class).to respond_to(:getprotoent)
+    expect{ described_class.getprotoent }.not_to raise_error
+    expect(described_class.getprotoent).to be_kind_of(Array)
   end
 
   example 'getprotoent method returns the expected results' do
-    expect(Net::Proto.getprotoent.first).to be_kind_of(Struct::ProtoStruct)
-    expect(Net::Proto.getprotoent{}).to be_nil # nil if block provided
+    expect(described_class.getprotoent.first).to be_kind_of(Struct::ProtoStruct)
+    expect(described_class.getprotoent{}).to be_nil # nil if block provided
   end
 
   example 'struct returned by getprotoent method contains the expected data' do
-    protoent = Net::Proto.getprotoent.first
+    protoent = described_class.getprotoent.first
     expect(protoent.members).to eq(%i[name aliases proto])
     expect(protoent.name).to be_kind_of(String)
     expect(protoent.aliases).to be_kind_of(Array)
@@ -104,21 +104,21 @@ RSpec.describe Net::Proto do
   end
 
   example 'all members of the aliases struct member are strings' do
-    protoent = Net::Proto.getprotoent.first
+    protoent = described_class.getprotoent.first
     expect(protoent.aliases.all?{ |e| e.is_a?(String) }).to eq(true)
   end
 
   example 'struct returned by getprotoent method is frozen' do
-    protoent = Net::Proto.getprotoent.first
+    protoent = described_class.getprotoent.first
     expect(protoent.frozen?).to eq(true)
   end
 
   example 'there is no constructor' do
-    expect{ Net::Proto.new }.to raise_error(NoMethodError)
+    expect{ described_class.new }.to raise_error(NoMethodError)
   end
 
   example 'ffi functions are private' do
-    methods = Net::Proto.methods(false)
+    methods = described_class.methods(false)
     expect(methods.include?(:setprotoent)).to eq(false)
     expect(methods.include?(:endprotoent)).to eq(false)
   end
