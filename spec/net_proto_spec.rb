@@ -54,8 +54,8 @@ RSpec.describe Net::Proto do
   end
 
   example 'getprotobynumber returns nil if not found' do
-    expect(described_class.getprotobynumber(9999999)).to eq(nil)
-    expect(described_class.getprotobynumber(-1)).to eq(nil)
+    expect(described_class.getprotobynumber(9999999)).to be(nil)
+    expect(described_class.getprotobynumber(-1)).to be(nil)
   end
 
   example 'getprotobynumber raises a TypeError if a non-numeric arg is used' do
@@ -105,12 +105,12 @@ RSpec.describe Net::Proto do
 
   example 'all members of the aliases struct member are strings' do
     protoent = described_class.getprotoent.first
-    expect(protoent.aliases.all?{ |e| e.is_a?(String) }).to eq(true)
+    expect(protoent.aliases.all?{ |e| e.is_a?(String) }).to be(true)
   end
 
   example 'struct returned by getprotoent method is frozen' do
     protoent = described_class.getprotoent.first
-    expect(protoent.frozen?).to eq(true)
+    expect(protoent.frozen?).to be(true)
   end
 
   example 'there is no constructor' do
@@ -119,7 +119,7 @@ RSpec.describe Net::Proto do
 
   example 'ffi functions are private' do
     methods = described_class.methods(false)
-    expect(methods.include?(:setprotoent)).to eq(false)
-    expect(methods.include?(:endprotoent)).to eq(false)
+    expect(methods.include?(:setprotoent)).to be(false)
+    expect(methods.include?(:endprotoent)).to be(false)
   end
 end
