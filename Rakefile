@@ -2,6 +2,7 @@ require 'rake'
 require 'rake/testtask'
 require 'rake/clean'
 require 'rspec/core/rake_task'
+require 'rubocop/rake_task'
 
 CLEAN.include('**/*.gem', '**/*.rbx', '**/*.rbc', '**/*.lock')
 
@@ -25,6 +26,8 @@ desc 'Run the example net-proto program'
 task :example do
   ruby '-Ilib examples/example_net_proto.rb'
 end
+
+RuboCop::RakeTask.new
 
 RSpec::Core::RakeTask.new(:spec) do |t|
   t.pattern = ['spec/net_proto_spec.rb']
