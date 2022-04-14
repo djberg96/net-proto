@@ -54,8 +54,8 @@ RSpec.describe Net::Proto do
   end
 
   example 'getprotobynumber returns nil if not found' do
-    expect(described_class.getprotobynumber(9999999)).to be(nil)
-    expect(described_class.getprotobynumber(-1)).to be(nil)
+    expect(described_class.getprotobynumber(9999999)).to be_nil
+    expect(described_class.getprotobynumber(-1)).to be_nil
   end
 
   example 'getprotobynumber raises a TypeError if a non-numeric arg is used' do
