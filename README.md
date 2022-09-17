@@ -1,3 +1,5 @@
+[![Ruby](https://github.com/djberg96/net-proto/actions/workflows/ruby.yml/badge.svg)](https://github.com/djberg96/net-proto/actions/workflows/ruby.yml)
+
 ## Description
 The net-proto package provides a way to get protocol information.
 
