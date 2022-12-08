@@ -45,7 +45,7 @@ RSpec.describe Net::Proto do
   example 'getprotobynumber basic functionality' do
     expect(described_class).to respond_to(:getprotobynumber)
     expect{ 0.upto(132){ |n| described_class.getprotobynumber(n) } }.not_to raise_error
-    expect(described_class.getprotobynumber(1)).to be_kind_of(String)
+    expect(described_class.getprotobynumber(1)).to be_a(String)
   end
 
   example 'getprotobynumber returns the expected result' do
@@ -87,20 +87,20 @@ RSpec.describe Net::Proto do
   example 'getprotoent basic functionality' do
     expect(described_class).to respond_to(:getprotoent)
     expect{ described_class.getprotoent }.not_to raise_error
-    expect(described_class.getprotoent).to be_kind_of(Array)
+    expect(described_class.getprotoent).to be_an(Array)
   end
 
   example 'getprotoent method returns the expected results' do
-    expect(described_class.getprotoent.first).to be_kind_of(Struct::ProtoStruct)
+    expect(described_class.getprotoent.first).to be_a(Struct::ProtoStruct)
     expect(described_class.getprotoent{}).to be_nil # nil if block provided
   end
 
   example 'struct returned by getprotoent method contains the expected data' do
     protoent = described_class.getprotoent.first
     expect(protoent.members).to eq(%i[name aliases proto])
-    expect(protoent.name).to be_kind_of(String)
-    expect(protoent.aliases).to be_kind_of(Array)
-    expect(protoent.proto).to be_kind_of(Integer)
+    expect(protoent.name).to be_a(String)
+    expect(protoent.aliases).to be_an(Array)
+    expect(protoent.proto).to be_an(Integer)
   end
 
   example 'all members of the aliases struct member are strings' do
