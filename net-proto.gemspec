@@ -16,9 +16,9 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency('ffi', '~> 1.0')
   spec.add_development_dependency('rspec', '~> 3.9')
-  spec.add_development_dependency('rake')
-  spec.add_development_dependency('rubocop')
-  spec.add_development_dependency('rubocop-rspec')
+  spec.add_development_dependency('rake', '~> 13.0')
+  spec.add_development_dependency('rubocop', '~> 1.4')
+  spec.add_development_dependency('rubocop-rspec', '~> 2.15')
 
   spec.metadata = {
     'homepage_uri'          => 'https://github.com/djberg96/net-proto',

@@ -144,7 +144,7 @@ module Net
     #
     def self.getprotoent
       structs = block_given? ? nil : []
-      file = File.join(ENV['SystemRoot'], '/system32/drivers/etc/protocol')
+      file = File.join(ENV.fetch('SystemRoot'), '/system32/drivers/etc/protocol')
 
       File.foreach(file) do |line|
         next if line.lstrip[0] == '#' # Skip comments
