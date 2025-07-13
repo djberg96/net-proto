@@ -17,10 +17,50 @@ module Net
     private_class_method :setprotoent, :endprotoent, :getprotobyname_r
     private_class_method :getprotobynumber_r, :getprotoent_r
 
+    # Buffer size for protocol queries
+    BUFFER_SIZE = 1024
+    private_constant :BUFFER_SIZE
+
+    # Allocates memory pointers needed for protocol queries
+    #
+    # @return [Array<FFI::MemoryPointer>] Array containing [pptr, qptr, buf]
+    def self.allocate_protocol_pointers
+      pptr = FFI::MemoryPointer.new(ProtocolStruct.size)
+      qptr = FFI::MemoryPointer.new(ProtocolStruct.size)
+      buf  = FFI::MemoryPointer.new(:char, BUFFER_SIZE)
+      [pptr, qptr, buf]
+    end
+
+    # Safely executes a protocol query with proper resource cleanup
+    #
+    # @yield Block to execute between setprotoent and endprotoent calls
+    # @return [Object] Result of the yielded block
+    def self.with_protocol_context
+      setprotoent(0)
+      yield
+    ensure
+      endprotoent
+    end
+
+    # Checks if the protocol query was successful
+    #
+    # @param int [Integer] Return value from protocol function
+    # @param qptr [FFI::MemoryPointer] Pointer to result pointer
+    # @return [Boolean] true if query failed, false if successful
+    def self.protocol_query_failed?(int, qptr)
+      int > 0 || qptr.get_pointer(0).null?
+    end
+
+    private_class_method :allocate_protocol_pointers, :with_protocol_context, :protocol_query_failed?
+
     # If given a protocol string, returns the corresponding number. If
     # given a protocol number, returns the corresponding string.
     #
     # Returns nil if not found in either case.
+    #
+    # @param argument [String, Integer] The protocol name or number to look up
+    # @return [Integer, String, nil] The corresponding protocol number/name, or nil if not found
+    # @raise [TypeError] if argument is not a String or Integer
     #
     # Examples:
     #
@@ -30,59 +70,65 @@ module Net
     def self.get_protocol(argument)
       if argument.is_a?(String)
         getprotobyname(argument)
-      else
+      elsif argument.is_a?(Integer)
         getprotobynumber(argument)
+      else
+        raise TypeError, 'Argument must be a String or Integer'
       end
     end
 
     # Given a protocol string, returns the corresponding number, or nil if
     # not found.
     #
+    # @param protocol [String] The protocol name to look up
+    # @return [Integer, nil] The protocol number, or nil if not found
+    # @raise [TypeError] if protocol is not a String
+    #
     # Examples:
     #
     #    Net::Proto.getprotobyname('tcp')   # => 6
     #    Net::Proto.getprotobyname('bogus') # => nil
+    #    Net::Proto.getprotobyname('')      # => nil
     #
     def self.getprotobyname(protocol)
-      raise TypeError unless protocol.is_a?(String)
+      raise TypeError, 'Protocol must be a String' unless protocol.is_a?(String)
 
-      pptr = FFI::MemoryPointer.new(ProtocolStruct.size)
-      qptr = FFI::MemoryPointer.new(ProtocolStruct.size)
-      buf  = FFI::MemoryPointer.new(:char, 1024)
+      # Return nil for empty or whitespace-only strings
+      return nil if protocol.strip.empty?
 
-      begin
-        setprotoent(0)
+      pptr, qptr, buf = allocate_protocol_pointers
+
+      with_protocol_context do
         int = getprotobyname_r(protocol, pptr, buf, buf.size, qptr)
-      ensure
-        endprotoent()
+        protocol_query_failed?(int, qptr) ? nil : ProtocolStruct.new(pptr)[:p_proto]
       end
-
-      int > 0 || qptr.get_pointer(0).null? ? nil : ProtocolStruct.new(pptr)[:p_proto]
     end
 
     # Given a protocol number, returns the corresponding string, or nil if
     # not found.
     #
+    # @param protocol [Integer] The protocol number to look up
+    # @return [String, nil] The protocol name, or nil if not found
+    # @raise [TypeError] if protocol is not an Integer
+    #
     # Examples:
     #
     #   Net::Proto.getprotobynumber(6)   # => 'tcp'
     #   Net::Proto.getprotobynumber(999) # => nil
+    #   Net::Proto.getprotobynumber(-1)  # => nil
     #
     def self.getprotobynumber(protocol)
-      raise TypeError unless protocol.is_a?(Integer)
+      raise TypeError, 'Protocol must be an Integer' unless protocol.is_a?(Integer)
 
-      pptr = FFI::MemoryPointer.new(ProtocolStruct.size)
-      qptr = FFI::MemoryPointer.new(ProtocolStruct.size)
-      buf  = FFI::MemoryPointer.new(:char, 1024)
+      # Return nil for negative numbers (invalid protocol numbers)
+      return nil if protocol < 0
 
-      begin
-        setprotoent(0)
+      pptr, qptr, buf = allocate_protocol_pointers
+
+      with_protocol_context do
         int = getprotobynumber_r(protocol, pptr, buf, buf.size, qptr)
-      ensure
-        endprotoent()
+        protocol_query_failed?(int, qptr) ? nil : ProtocolStruct.new(pptr)[:p_name]
       end
-
-      int > 0 || qptr.get_pointer(0).null? ? nil : ProtocolStruct.new(pptr)[:p_name]
     end
 
     # In block form, yields each entry from /etc/protocols as a struct of type
@@ -90,6 +136,10 @@ module Net
     #
     # The fields are 'name' (a string), 'aliases' (an array of strings,
     # though often only one element), and 'proto' (a number).
+    #
+    # @yield [ProtoStruct] Each protocol entry if a block is given
+    # @return [Array<ProtoStruct>, nil] Array of protocol structs if no block given,
+    #   nil if block given
     #
     # Example:
     #
@@ -104,14 +154,15 @@ module Net
 
       pptr = FFI::MemoryPointer.new(ProtocolStruct.size)
       qptr = FFI::MemoryPointer.new(ProtocolStruct.size)
-      buf  = FFI::MemoryPointer.new(1024)
+      buf  = FFI::MemoryPointer.new(BUFFER_SIZE)
 
-      begin
-        setprotoent(0)
-
-        while int = getprotoent_r(pptr, buf, buf.size, qptr)
+      with_protocol_context do
+        loop do
+          int = getprotoent_r(pptr, buf, buf.size, qptr)
           break if int > 0 || qptr.null?
-          buf = FFI::MemoryPointer.new(1024)
+
+          # Reallocate buffer if needed
+          buf = FFI::MemoryPointer.new(BUFFER_SIZE)
 
           ffi_struct = ProtocolStruct.new(pptr)
 
@@ -127,8 +178,6 @@ module Net
             structs << ruby_struct
           end
         end
-      ensure
-        endprotoent
       end
 
       structs
